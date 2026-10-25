@@ -75,7 +75,7 @@ text = "Coolant: 3"
 
 [node name="AmmoLabel" type="Label" parent="Hud/DebugPanel/MarginContainer/Rows"]
 layout_mode = 2
-text = "Ammo: 20/20"
+text = "Ammo: 20/50"
 
 [node name="DeathLabel" type="Label" parent="Hud/DebugPanel/MarginContainer/Rows"]
 layout_mode = 2

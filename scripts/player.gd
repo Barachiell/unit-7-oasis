@@ -17,7 +17,8 @@ signal player_died
 @export var stamina_regen_delay: float = 0.75
 @export var run_speed_multiplier: float = 1.8
 @export_range(0.1, 1.0, 0.05) var run_unlock_threshold_ratio: float = 0.25
-@export var max_ammo: int = 20
+@export var max_ammo: int = 50
+@export var starting_ammo: int = 20
 @export var fire_rate: float = 0.15
 @export var bullet_scene: PackedScene = preload("res://scenes/bullet.tscn")
 @export var max_cells: int = 5
@@ -37,7 +38,7 @@ var aim_direction: Vector2 = Vector2.RIGHT
 var current_stamina: float = max_stamina
 var run_locked: bool = false
 var regen_delay_remaining: float = 0.0
-var current_ammo: int = max_ammo
+var current_ammo: int = starting_ammo
 var fire_cooldown_remaining: float = 0.0
 var current_cells: int = max_cells
 var coolant_count: int = starting_coolant_count
@@ -69,7 +70,7 @@ func _physics_process(delta: float) -> void:
 func _ready() -> void:
 	add_to_group("player")
 	current_stamina = max_stamina
-	current_ammo = max_ammo
+	current_ammo = mini(starting_ammo, max_ammo)
 	current_cells = max_cells
 	coolant_count = starting_coolant_count
 	hurtbox.area_entered.connect(_on_hurtbox_area_entered)

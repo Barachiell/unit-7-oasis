@@ -18,12 +18,27 @@ const ROOM_HEIGHT := 24
 @onready var coolant_label: Label = $Hud/DebugPanel/MarginContainer/Rows/CoolantLabel
 @onready var ammo_label: Label = $Hud/DebugPanel/MarginContainer/Rows/AmmoLabel
 @onready var death_label: Label = $Hud/DebugPanel/MarginContainer/Rows/DeathLabel
+@onready var death_overlay: Control = $Hud/DeathOverlay
+@onready var fade_rect: ColorRect = $Hud/DeathOverlay/FadeRect
+@onready var failure_panel: PanelContainer = $Hud/DeathOverlay/FailurePanel
+@onready var reboot_button: Button = $Hud/DeathOverlay/FailurePanel/MarginContainer/Rows/RebootButton
+
+var is_restart_pending: bool = false
 
 func _ready() -> void:
+	death_overlay.visible = false
+	fade_rect.color.a = 0.0
+	failure_panel.visible = false
+	reboot_button.pressed.connect(_on_reboot_pressed)
+	reboot_button.focus_mode = Control.FOCUS_ALL
+
 	y_sort_enabled = true
 	objects_layer.y_sort_enabled = true
 	overhead_layer.z_index = 10
 	objects_layer.collision_enabled = true
+
+	var game_manager := get_node("/root/GameManager") as OasisGameManager
+	game_manager.current_zone = scene_file_path
 
 	var tile_set := _build_tileset()
 	ground_layer.tile_set = tile_set
@@ -38,6 +53,15 @@ func _ready() -> void:
 	_apply_camera_limits()
 	_connect_stamina_ui()
 	_connect_player_debug_ui()
+	game_manager.apply_to_player(player)
+	_refresh_debug_values()
+
+func _input(event: InputEvent) -> void:
+	if not is_restart_pending:
+		return
+
+	if event.is_action_pressed("interact") or event.is_action_pressed("advance_dialogue"):
+		_on_reboot_pressed()
 
 func _build_tileset() -> TileSet:
 	var tile_set := TileSet.new()
@@ -110,9 +134,15 @@ func _connect_player_debug_ui() -> void:
 	player.coolant_changed.connect(_on_coolant_changed)
 	player.ammo_changed.connect(_on_ammo_changed)
 	player.player_died.connect(_on_player_died)
+	player.cells_changed.connect(_sync_game_manager_state)
+	player.coolant_changed.connect(_sync_game_manager_state)
+	player.ammo_changed.connect(_sync_game_manager_state)
+
+func _refresh_debug_values() -> void:
 	_on_cells_changed(player.current_cells, player.max_cells)
 	_on_coolant_changed(player.coolant_count)
 	_on_ammo_changed(player.current_ammo, player.max_ammo)
+	_sync_game_manager_state()
 
 func _on_cells_changed(current: int, maximum: int) -> void:
 	cells_label.text = "Cells: %d/%d" % [current, maximum]
@@ -127,3 +157,34 @@ func _on_ammo_changed(current: int, maximum: int) -> void:
 
 func _on_player_died() -> void:
 	death_label.text = "SYSTEM FAILURE"
+	_start_death_sequence()
+
+func _start_death_sequence() -> void:
+	if is_restart_pending:
+		return
+
+	is_restart_pending = true
+	player.set_input_enabled(false)
+	for enemy in get_tree().get_nodes_in_group("enemy"):
+		if enemy is Node:
+			(enemy as Node).process_mode = Node.PROCESS_MODE_DISABLED
+
+	death_overlay.visible = true
+	var fade_tween := create_tween()
+	fade_tween.tween_property(fade_rect, "color:a", 0.78, 0.35)
+	await fade_tween.finished
+	failure_panel.visible = true
+	reboot_button.grab_focus()
+
+func _on_reboot_pressed() -> void:
+	if not is_restart_pending:
+		return
+
+	var game_manager := get_node("/root/GameManager") as OasisGameManager
+	game_manager.handle_player_death()
+	is_restart_pending = false
+	get_tree().change_scene_to_file(game_manager.get_restart_scene_path())
+
+func _sync_game_manager_state(_current_value: Variant = null, _maximum_value: Variant = null) -> void:
+	var game_manager := get_node("/root/GameManager") as OasisGameManager
+	game_manager.sync_from_player(player)

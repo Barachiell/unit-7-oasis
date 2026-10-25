@@ -47,8 +47,15 @@ var flash_timer: float = 0.0
 var flash_visible_state: bool = true
 var contact_damage_tick_remaining: float = 0.0
 var contact_damage_sources: Dictionary = {}
+var input_enabled: bool = true
 
 func _physics_process(delta: float) -> void:
+	if not input_enabled:
+		velocity = Vector2.ZERO
+		move_and_slide()
+		_update_invincibility(delta)
+		return
+
 	var input_direction := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	var movement_direction := input_direction.normalized()
 	var is_moving := movement_direction.length_squared() > 0.0
@@ -175,6 +182,19 @@ func add_coolant(amount: int) -> void:
 
 	coolant_count += amount
 	coolant_changed.emit(coolant_count)
+
+func set_runtime_stats(ammo_value: int, coolant_value: int, cells_value: int) -> void:
+	current_ammo = clampi(ammo_value, 0, max_ammo)
+	coolant_count = maxi(coolant_value, 0)
+	current_cells = clampi(cells_value, 0, max_cells)
+	ammo_changed.emit(current_ammo, max_ammo)
+	coolant_changed.emit(coolant_count)
+	cells_changed.emit(current_cells, max_cells)
+
+func set_input_enabled(enabled: bool) -> void:
+	input_enabled = enabled
+	if not enabled:
+		velocity = Vector2.ZERO
 
 func take_bullet_hit(amount: int) -> void:
 	take_damage(maxi(amount, 1))

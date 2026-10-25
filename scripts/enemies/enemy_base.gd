@@ -41,6 +41,7 @@ var is_player_in_detection: bool = false
 var rng := RandomNumberGenerator.new()
 
 func _ready() -> void:
+	add_to_group("enemy")
 	rng.randomize()
 	current_health = max_health
 	_configure_detection_radius()

@@ -16,5 +16,33 @@
       "speaker": "Unit 7",
       "text": "Objective acknowledged. Recover all three components. Directions received: NORTH, then WEST, then NORTH."
     }
+  ],
+  "component_north_found": [
+    {
+      "speaker": "Unit 7",
+      "text": "AXION component secured. Direction update received: proceed WEST for the second crash site."
+    }
+  ],
+  "component_west_found": [
+    {
+      "speaker": "Unit 7",
+      "text": "Second AXION component recovered. Final direction: NORTH once more."
+    }
+  ],
+  "component_final_found": [
+    {
+      "speaker": "Unit 7",
+      "text": "Third component confirmed. AXION reconstruction sequence complete."
+    }
+  ],
+  "ending_return": [
+    {
+      "speaker": "AXION",
+      "text": "Coordinates restored. The last oasis can be reached. Unit 7, return to the village."
+    },
+    {
+      "speaker": "System",
+      "text": "Mission complete. Returning to main menu."
+    }
   ]
 }

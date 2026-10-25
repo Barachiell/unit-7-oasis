@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://dy5mcfkrghymx"]
+
+[ext_resource type="Script" path="res://scripts/zones/exit_trigger.gd" id="1_80h0k"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_exit"]
+size = Vector2(26, 64)
+
+[node name="ExitTrigger" type="Area2D"]
+collision_mask = 1
+monitoring = true
+monitorable = false
+script = ExtResource("1_80h0k")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_exit")

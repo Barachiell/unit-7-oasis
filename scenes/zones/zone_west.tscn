@@ -1,0 +1,145 @@
+[gd_scene load_steps=9 format=3 uid="uid://dxf7btwcq4m8t"]
+
+[ext_resource type="Script" path="res://scripts/zones/zone_runtime.gd" id="1_6d2ou"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_6apwb"]
+[ext_resource type="PackedScene" path="res://scenes/zones/exit_trigger.tscn" id="3_15y2g"]
+[ext_resource type="PackedScene" path="res://scenes/pickups/axion_component.tscn" id="4_81w82"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_exit_open"]
+size = Vector2(40, 20)
+
+[node name="ZoneWest" type="Node2D"]
+script = ExtResource("1_6d2ou")
+zone_id = "zone_west"
+
+[node name="Ground" type="TileMapLayer" parent="."]
+
+[node name="GroundDetail" type="TileMapLayer" parent="."]
+
+[node name="Objects" type="TileMapLayer" parent="."]
+
+[node name="Overhead" type="TileMapLayer" parent="."]
+
+[node name="Player" parent="." instance=ExtResource("2_6apwb")]
+position = Vector2(120, 220)
+
+[node name="SpawnPoints" type="Node2D" parent="."]
+
+[node name="Spawn_start" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(120, 220)
+
+[node name="Spawn_from_north_1" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(120, 220)
+
+[node name="Spawn_from_north_2" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(120, 220)
+
+[node name="Entities" type="Node2D" parent="."]
+
+[node name="Pickups" type="Node2D" parent="."]
+
+[node name="Component2" parent="Pickups" instance=ExtResource("4_81w82")]
+position = Vector2(620, 220)
+component_id = "west_component_2"
+pickup_dialogue_id = "component_west_found"
+
+[node name="Triggers" type="Node2D" parent="."]
+
+[node name="ExitToNorth1" parent="Triggers" instance=ExtResource("3_15y2g")]
+target_zone = "res://scenes/zones/zone_north_1.tscn"
+target_spawn_id = "from_west"
+position = Vector2(32, 240)
+
+[node name="CollisionShape2D" parent="Triggers/ExitToNorth1" index="0"]
+shape = SubResource("RectangleShape2D_exit_open")
+
+[node name="ExitToNorth2" parent="Triggers" instance=ExtResource("3_15y2g")]
+target_zone = "res://scenes/zones/zone_north_2.tscn"
+target_spawn_id = "from_west"
+position = Vector2(720, 240)
+
+[node name="CollisionShape2D" parent="Triggers/ExitToNorth2" index="0"]
+shape = SubResource("RectangleShape2D_exit_open")
+
+[node name="Hud" type="CanvasLayer" parent="."]
+
+[node name="TopPanel" type="PanelContainer" parent="Hud"]
+offset_left = 12.0
+offset_top = 12.0
+offset_right = 280.0
+offset_bottom = 74.0
+
+[node name="MarginContainer" type="MarginContainer" parent="Hud/TopPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 8
+
+[node name="Rows" type="VBoxContainer" parent="Hud/TopPanel/MarginContainer"]
+layout_mode = 2
+
+[node name="ComponentsLabel" type="Label" parent="Hud/TopPanel/MarginContainer/Rows"]
+layout_mode = 2
+text = "AXION: 0/3"
+
+[node name="InfoLabel" type="Label" parent="Hud/TopPanel/MarginContainer/Rows"]
+layout_mode = 2
+text = "Zone: zone_west"
+
+[node name="FadeRect" type="ColorRect" parent="Hud"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="DeathOverlay" type="Control" parent="Hud"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="Hud/DeathOverlay"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -60.0
+offset_right = 150.0
+offset_bottom = 60.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Hud/DeathOverlay/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="Rows" type="VBoxContainer" parent="Hud/DeathOverlay/PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="Hud/DeathOverlay/PanelContainer/MarginContainer/Rows"]
+layout_mode = 2
+text = "SYSTEM FAILURE — REBOOT"
+horizontal_alignment = 1
+
+[node name="HintLabel" type="Label" parent="Hud/DeathOverlay/PanelContainer/MarginContainer/Rows"]
+layout_mode = 2
+text = "Press E or Enter to confirm"
+horizontal_alignment = 1
+
+[node name="RebootButton" type="Button" parent="Hud/DeathOverlay/PanelContainer/MarginContainer/Rows"]
+layout_mode = 2
+text = "Reboot"

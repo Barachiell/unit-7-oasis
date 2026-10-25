@@ -1,0 +1,27 @@
+{
+  "village": {
+    "enemies": []
+  },
+  "zone_north_1": {
+    "enemies": [
+      { "type": "Scrapper", "x": 510, "y": 180 },
+      { "type": "Scrapper", "x": 390, "y": 260 },
+      { "type": "Scrapper", "x": 600, "y": 300 }
+    ]
+  },
+  "zone_west": {
+    "enemies": [
+      { "type": "Scrapper", "x": 540, "y": 200 },
+      { "type": "Scrapper", "x": 410, "y": 250 },
+      { "type": "Hauler", "x": 620, "y": 280 }
+    ]
+  },
+  "zone_north_2": {
+    "enemies": [
+      { "type": "Hauler", "x": 520, "y": 190 },
+      { "type": "Hauler", "x": 620, "y": 280 },
+      { "type": "Hauler", "x": 430, "y": 250 },
+      { "type": "Scrapper", "x": 560, "y": 330 }
+    ]
+  }
+}

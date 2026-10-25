@@ -1,8 +1,9 @@
-[gd_scene format=3 uid="uid://drfvvq47h2qon"]
+[gd_scene load_steps=5 format=3 uid="uid://drfvvq47h2qon"]
 
 [ext_resource type="Script" path="res://scripts/debug/test_room_setup.gd" id="1_hdn7g"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_vo6ru"]
 [ext_resource type="Script" path="res://scripts/bootstrap.gd" id="3_w8eqs"]
+[ext_resource type="PackedScene" path="res://ui/stamina_ring.tscn" id="4_sy0f0"]
 
 [node name="TestRoom" type="Node2D"]
 script = ExtResource("1_hdn7g")
@@ -20,3 +21,11 @@ script = ExtResource("3_w8eqs")
 position = Vector2(120, 120)
 
 [node name="Overhead" type="TileMapLayer" parent="."]
+
+[node name="Hud" type="CanvasLayer" parent="."]
+
+[node name="StaminaRing" parent="Hud" instance=ExtResource("4_sy0f0")]
+offset_left = 14.0
+offset_top = 14.0
+offset_right = 88.0
+offset_bottom = 88.0

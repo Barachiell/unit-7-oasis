@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://dqjf5ie2lo6fh"]
+
+[ext_resource type="Script" path="res://scripts/ui/stamina_ring.gd" id="1_4okdv"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/stamina_ring_under.svg" id="2_oqb1e"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/stamina_ring_fill.svg" id="3_6imn0"]
+
+[node name="StaminaRing" type="TextureProgressBar"]
+custom_minimum_size = Vector2(74, 74)
+offset_right = 74.0
+offset_bottom = 74.0
+min_value = 0.0
+max_value = 1.0
+step = 0.001
+value = 1.0
+fill_mode = 4
+radial_initial_angle = -90.0
+radial_fill_degrees = 360.0
+texture_under = ExtResource("2_oqb1e")
+texture_progress = ExtResource("3_6imn0")
+tint_under = Color(1, 1, 1, 0.7)
+script = ExtResource("1_4okdv")

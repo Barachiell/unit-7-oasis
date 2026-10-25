@@ -12,7 +12,8 @@ const ROOM_HEIGHT := 24
 @onready var detail_layer: TileMapLayer = $GroundDetail
 @onready var objects_layer: TileMapLayer = $Objects
 @onready var overhead_layer: TileMapLayer = $Overhead
-@onready var player: CharacterBody2D = $Player
+@onready var player: PlayerController = $Player
+@onready var stamina_ring: StaminaRing = $Hud/StaminaRing
 
 func _ready() -> void:
 	y_sort_enabled = true
@@ -31,6 +32,7 @@ func _ready() -> void:
 	_paint_objects()
 	_paint_overhead()
 	_apply_camera_limits()
+	_connect_stamina_ui()
 
 func _build_tileset() -> TileSet:
 	var tile_set := TileSet.new()
@@ -90,3 +92,10 @@ func _apply_camera_limits() -> void:
 	camera.limit_top = 0
 	camera.limit_right = ROOM_WIDTH * 16
 	camera.limit_bottom = ROOM_HEIGHT * 16
+
+func _connect_stamina_ui() -> void:
+	player.stamina_changed.connect(_on_stamina_changed)
+	_on_stamina_changed(player.current_stamina, player.max_stamina)
+
+func _on_stamina_changed(current: float, maximum: float) -> void:
+	stamina_ring.set_stamina(current, maximum)

@@ -25,7 +25,7 @@ func _ready() -> void:
 	start_button.grab_focus()
 
 func _on_start_pressed() -> void:
-	var game_manager := get_node("/root/GameManager") as OasisGameManager
+	var game_manager: Node = get_node("/root/GameManager")
 	game_manager.reset_run_state()
 	get_tree().change_scene_to_file(VILLAGE_SCENE_PATH)
 

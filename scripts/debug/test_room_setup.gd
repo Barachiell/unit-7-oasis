@@ -37,7 +37,7 @@ func _ready() -> void:
 	overhead_layer.z_index = 10
 	objects_layer.collision_enabled = true
 
-	var game_manager := get_node("/root/GameManager") as OasisGameManager
+	var game_manager: Node = get_node("/root/GameManager")
 	game_manager.current_zone = scene_file_path
 
 	var tile_set := _build_tileset()
@@ -180,11 +180,11 @@ func _on_reboot_pressed() -> void:
 	if not is_restart_pending:
 		return
 
-	var game_manager := get_node("/root/GameManager") as OasisGameManager
+	var game_manager: Node = get_node("/root/GameManager")
 	game_manager.handle_player_death()
 	is_restart_pending = false
 	get_tree().change_scene_to_file(game_manager.get_restart_scene_path())
 
 func _sync_game_manager_state(_current_value: Variant = null, _maximum_value: Variant = null) -> void:
-	var game_manager := get_node("/root/GameManager") as OasisGameManager
+	var game_manager: Node = get_node("/root/GameManager")
 	game_manager.sync_from_player(player)

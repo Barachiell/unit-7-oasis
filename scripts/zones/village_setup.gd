@@ -4,7 +4,7 @@ extends Node2D
 @onready var hud_label: Label = $Hud/InfoPanel/MarginContainer/Rows/RunStateLabel
 
 func _ready() -> void:
-	var game_manager := get_node("/root/GameManager") as OasisGameManager
+	var game_manager: Node = get_node("/root/GameManager")
 	game_manager.current_zone = scene_file_path
 	game_manager.apply_to_player(player)
 	_update_state_label()

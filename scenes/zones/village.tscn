@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://dr8xukmugyssm"]
+[gd_scene format=3 uid="uid://dr8xukmugyssm"]
 
 [ext_resource type="Script" path="res://scripts/zones/village_setup.gd" id="1_53bsx"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_5vyi0"]

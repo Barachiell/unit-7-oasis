@@ -1,0 +1,87 @@
+[gd_scene load_steps=2 format=3 uid="uid://c4p4m4oqw77tx"]
+
+[ext_resource type="Script" path="res://scripts/ui/controls_screen.gd" id="1_2jmy5"]
+
+[node name="ControlsMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_2jmy5")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0745098, 0.0941176, 0.117647, 1)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ControlsPanel" type="PanelContainer" parent="CenterContainer"]
+layout_mode = 2
+custom_minimum_size = Vector2(520, 300)
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/ControlsPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 16
+
+[node name="Rows" type="VBoxContainer" parent="CenterContainer/ControlsPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/ControlsPanel/MarginContainer/Rows"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Controls"
+horizontal_alignment = 1
+
+[node name="MoveLabel" type="Label" parent="CenterContainer/ControlsPanel/MarginContainer/Rows"]
+layout_mode = 2
+text = "Move: W A S D / Arrow Keys"
+
+[node name="ShootLabel" type="Label" parent="CenterContainer/ControlsPanel/MarginContainer/Rows"]
+layout_mode = 2
+text = "Shoot: Left Mouse / K"
+
+[node name="RunLabel" type="Label" parent="CenterContainer/ControlsPanel/MarginContainer/Rows"]
+layout_mode = 2
+text = "Run: Shift (hold)"
+
+[node name="CoolantLabel" type="Label" parent="CenterContainer/ControlsPanel/MarginContainer/Rows"]
+layout_mode = 2
+text = "Use Coolant Flask: R"
+
+[node name="DashLabel" type="Label" parent="CenterContainer/ControlsPanel/MarginContainer/Rows"]
+layout_mode = 2
+text = "Dash: Space (later block)"
+
+[node name="InteractLabel" type="Label" parent="CenterContainer/ControlsPanel/MarginContainer/Rows"]
+layout_mode = 2
+text = "Interact / Advance Dialogue: E / Enter"
+
+[node name="PauseLabel" type="Label" parent="CenterContainer/ControlsPanel/MarginContainer/Rows"]
+layout_mode = 2
+text = "Pause: Escape"
+
+[node name="Spacer" type="Control" parent="CenterContainer/ControlsPanel/MarginContainer/Rows"]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="CenterContainer/ControlsPanel/MarginContainer/Rows"]
+layout_mode = 2
+focus_mode = 2
+text = "Back"

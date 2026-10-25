@@ -17,8 +17,6 @@ signal ammo_changed(current: int, maximum: int)
 @export var max_ammo: int = 20
 @export var fire_rate: float = 0.15
 @export var bullet_scene: PackedScene = preload("res://scenes/bullet.tscn")
-@export var shot_spawn_distance: float = 10.0
-@export var feet_y_offset: float = 8.0
 
 @onready var muzzle: Marker2D = $Muzzle
 @onready var camera: Camera2D = $Camera2D
@@ -115,7 +113,7 @@ func _spawn_player_bullet() -> void:
 		return
 	var bullet := bullet_instance as Area2D
 
-	bullet.global_position = _get_bullet_spawn_position()
+	bullet.global_position = muzzle.global_position
 	bullet.set("direction", aim_direction)
 	bullet.rotation = aim_direction.angle()
 
@@ -130,26 +128,3 @@ func _spawn_player_bullet() -> void:
 func _try_play_dry_click() -> void:
 	# Audio bus wiring is added in Block 14.
 	print("dry_click")
-
-func _get_bullet_spawn_position() -> Vector2:
-	var feet_origin := global_position + Vector2(0.0, feet_y_offset)
-	var spawn_position := feet_origin + aim_direction * shot_spawn_distance
-	if not _is_world_at_point(spawn_position):
-		return spawn_position
-
-	for step in range(1, 6):
-		var fallback_distance := maxf(shot_spawn_distance - float(step) * 2.0, 0.0)
-		var fallback_position := feet_origin + aim_direction * fallback_distance
-		if not _is_world_at_point(fallback_position):
-			return fallback_position
-
-	return feet_origin
-
-func _is_world_at_point(point: Vector2) -> bool:
-	var query := PhysicsPointQueryParameters2D.new()
-	query.position = point
-	query.collision_mask = 1 << 4
-	query.collide_with_bodies = true
-	query.collide_with_areas = true
-	var hits: Array[Dictionary] = get_world_2d().direct_space_state.intersect_point(query, 1)
-	return not hits.is_empty()

@@ -164,10 +164,10 @@ func _paint_zone_obstacles_from_data() -> void:
 		_paint_solid_rect(obstacle as Dictionary)
 
 func _paint_solid_rect(obstacle: Dictionary) -> void:
-	var start_x := int(obstacle.get("x", 0))
-	var start_y := int(obstacle.get("y", 0))
-	var width := max(int(obstacle.get("w", 1)), 1)
-	var height := max(int(obstacle.get("h", 1)), 1)
+	var start_x: int = int(obstacle.get("x", 0))
+	var start_y: int = int(obstacle.get("y", 0))
+	var width: int = maxi(int(obstacle.get("w", 1)), 1)
+	var height: int = maxi(int(obstacle.get("h", 1)), 1)
 
 	for x in range(start_x, start_x + width):
 		for y in range(start_y, start_y + height):

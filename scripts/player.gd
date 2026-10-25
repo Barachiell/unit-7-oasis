@@ -2,16 +2,20 @@ extends CharacterBody2D
 
 @export var walk_speed: float = 90.0
 @export var muzzle_radius: float = 12.0
+@export var look_ahead_distance: float = 24.0
+@export var look_ahead_smoothing: float = 10.0
 
 @onready var muzzle: Marker2D = $Muzzle
+@onready var camera: Camera2D = $Camera2D
 
 var aim_direction: Vector2 = Vector2.RIGHT
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	var input_direction := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	velocity = input_direction.normalized() * walk_speed
 	move_and_slide()
 	_update_aim_direction()
+	_update_camera_look_ahead(delta)
 
 func _update_aim_direction() -> void:
 	var to_mouse := get_global_mouse_position() - global_position
@@ -20,3 +24,8 @@ func _update_aim_direction() -> void:
 
 	muzzle.position = aim_direction * muzzle_radius
 	muzzle.rotation = aim_direction.angle()
+
+func _update_camera_look_ahead(delta: float) -> void:
+	var target_offset: Vector2 = aim_direction * look_ahead_distance
+	var weight: float = clampf(delta * look_ahead_smoothing, 0.0, 1.0)
+	camera.offset = camera.offset.lerp(target_offset, weight)

@@ -12,6 +12,7 @@ const ROOM_HEIGHT := 24
 @onready var detail_layer: TileMapLayer = $GroundDetail
 @onready var objects_layer: TileMapLayer = $Objects
 @onready var overhead_layer: TileMapLayer = $Overhead
+@onready var player: CharacterBody2D = $Player
 
 func _ready() -> void:
 	y_sort_enabled = true
@@ -29,6 +30,7 @@ func _ready() -> void:
 	_paint_details()
 	_paint_objects()
 	_paint_overhead()
+	_apply_camera_limits()
 
 func _build_tileset() -> TileSet:
 	var tile_set := TileSet.new()
@@ -81,3 +83,10 @@ func _paint_objects() -> void:
 func _paint_overhead() -> void:
 	for x in range(12, 19):
 		overhead_layer.set_cell(Vector2i(x, 6), TILE_SOURCE_ID, TILE_OVERHEAD)
+
+func _apply_camera_limits() -> void:
+	var camera: Camera2D = player.get_node("Camera2D")
+	camera.limit_left = 0
+	camera.limit_top = 0
+	camera.limit_right = ROOM_WIDTH * 16
+	camera.limit_bottom = ROOM_HEIGHT * 16

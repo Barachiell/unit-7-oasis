@@ -23,3 +23,9 @@ shape = SubResource("CapsuleShape2D_rcm4m")
 
 [node name="Muzzle" type="Marker2D" parent="."]
 position = Vector2(12, 0)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+enabled = true
+position_smoothing_enabled = true
+position_smoothing_speed = 8.0
+zoom = Vector2(3, 3)

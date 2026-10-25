@@ -1,8 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://drfvvq47h2qon"]
+[gd_scene load_steps=5 format=3 uid="uid://drfvvq47h2qon"]
 
 [ext_resource type="Script" path="res://scripts/debug/test_room_setup.gd" id="1_hdn7g"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_vo6ru"]
 [ext_resource type="PackedScene" path="res://ui/stamina_ring.tscn" id="3_sy0f0"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hazard"]
+size = Vector2(34, 34)
 
 [node name="TestRoom" type="Node2D"]
 script = ExtResource("1_hdn7g")
@@ -18,6 +21,17 @@ position = Vector2(120, 120)
 
 [node name="Overhead" type="TileMapLayer" parent="."]
 
+[node name="TestHazard" type="Area2D" parent="."]
+position = Vector2(280, 170)
+collision_layer = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TestHazard"]
+shape = SubResource("RectangleShape2D_hazard")
+
+[node name="Polygon2D" type="Polygon2D" parent="TestHazard"]
+color = Color(0.901961, 0.2, 0.2, 0.5)
+polygon = PackedVector2Array(-17, -17, 17, -17, 17, 17, -17, 17)
+
 [node name="Hud" type="CanvasLayer" parent="."]
 
 [node name="StaminaRing" parent="Hud" instance=ExtResource("3_sy0f0")]
@@ -25,3 +39,32 @@ offset_left = 14.0
 offset_top = 14.0
 offset_right = 88.0
 offset_bottom = 88.0
+
+[node name="DebugPanel" type="PanelContainer" parent="Hud"]
+offset_left = 474.0
+offset_top = 10.0
+offset_right = 630.0
+offset_bottom = 86.0
+texture_filter = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="Hud/DebugPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 6
+
+[node name="Rows" type="VBoxContainer" parent="Hud/DebugPanel/MarginContainer"]
+layout_mode = 2
+
+[node name="CellsLabel" type="Label" parent="Hud/DebugPanel/MarginContainer/Rows"]
+layout_mode = 2
+text = "Cells: 5/5"
+
+[node name="CoolantLabel" type="Label" parent="Hud/DebugPanel/MarginContainer/Rows"]
+layout_mode = 2
+text = "Coolant: 3"
+
+[node name="DeathLabel" type="Label" parent="Hud/DebugPanel/MarginContainer/Rows"]
+layout_mode = 2
+text = ""

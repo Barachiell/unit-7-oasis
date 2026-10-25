@@ -3,6 +3,9 @@ extends CharacterBody2D
 
 signal stamina_changed(current: float, maximum: float)
 signal ammo_changed(current: int, maximum: int)
+signal cells_changed(current: int, maximum: int)
+signal coolant_changed(current: int)
+signal player_died
 
 @export var walk_speed: float = 90.0
 @export var muzzle_radius: float = 12.0
@@ -17,9 +20,18 @@ signal ammo_changed(current: int, maximum: int)
 @export var max_ammo: int = 20
 @export var fire_rate: float = 0.15
 @export var bullet_scene: PackedScene = preload("res://scenes/bullet.tscn")
+@export var max_cells: int = 5
+@export var invincibility_duration: float = 0.8
+@export var contact_damage_amount: int = 2
+@export var contact_damage_interval: float = 1.0
+@export var starting_coolant_count: int = 3
+@export var coolant_heal_amount: int = 2
 
 @onready var muzzle: Marker2D = $Muzzle
 @onready var camera: Camera2D = $Camera2D
+@onready var sprite: Sprite2D = $Sprite2D
+@onready var hurtbox: Area2D = $Hurtbox
+@onready var contact_damage_area: Area2D = $ContactDamageArea
 
 var aim_direction: Vector2 = Vector2.RIGHT
 var current_stamina: float = max_stamina
@@ -27,6 +39,13 @@ var run_locked: bool = false
 var regen_delay_remaining: float = 0.0
 var current_ammo: int = max_ammo
 var fire_cooldown_remaining: float = 0.0
+var current_cells: int = max_cells
+var coolant_count: int = starting_coolant_count
+var invincibility_remaining: float = 0.0
+var flash_timer: float = 0.0
+var flash_visible_state: bool = true
+var contact_damage_tick_remaining: float = 0.0
+var contact_damage_sources: Dictionary = {}
 
 func _physics_process(delta: float) -> void:
 	var input_direction := Input.get_vector("move_left", "move_right", "move_up", "move_down")
@@ -43,10 +62,22 @@ func _physics_process(delta: float) -> void:
 	_update_aim_direction()
 	_update_camera_look_ahead(delta)
 	_update_shooting(delta)
+	_update_invincibility(delta)
+	_update_contact_damage(delta)
+	_try_use_coolant()
 
 func _ready() -> void:
 	current_stamina = max_stamina
 	current_ammo = max_ammo
+	current_cells = max_cells
+	coolant_count = starting_coolant_count
+	hurtbox.area_entered.connect(_on_hurtbox_area_entered)
+	contact_damage_area.body_entered.connect(_on_contact_body_entered)
+	contact_damage_area.body_exited.connect(_on_contact_body_exited)
+	contact_damage_area.area_entered.connect(_on_contact_area_entered)
+	contact_damage_area.area_exited.connect(_on_contact_area_exited)
+	cells_changed.emit(current_cells, max_cells)
+	coolant_changed.emit(coolant_count)
 	stamina_changed.emit(current_stamina, max_stamina)
 	ammo_changed.emit(current_ammo, max_ammo)
 
@@ -128,3 +159,98 @@ func _spawn_player_bullet() -> void:
 func _try_play_dry_click() -> void:
 	# Audio bus wiring is added in Block 14.
 	print("dry_click")
+
+func take_damage(amount: int) -> void:
+	if amount <= 0 or invincibility_remaining > 0.0 or current_cells <= 0:
+		return
+
+	current_cells = maxi(current_cells - amount, 0)
+	cells_changed.emit(current_cells, max_cells)
+	_start_invincibility()
+
+	if current_cells == 0:
+		player_died.emit()
+
+func _try_use_coolant() -> void:
+	if not Input.is_action_just_pressed("use_coolant"):
+		return
+	if coolant_count <= 0 or current_cells >= max_cells:
+		return
+
+	coolant_count -= 1
+	coolant_changed.emit(coolant_count)
+	current_cells = mini(current_cells + coolant_heal_amount, max_cells)
+	cells_changed.emit(current_cells, max_cells)
+
+func _start_invincibility() -> void:
+	invincibility_remaining = invincibility_duration
+	flash_timer = 0.0
+	flash_visible_state = false
+	sprite.modulate = Color(1.0, 1.0, 1.0, 0.35)
+
+func _update_invincibility(delta: float) -> void:
+	if invincibility_remaining <= 0.0:
+		if not flash_visible_state:
+			flash_visible_state = true
+			sprite.modulate = Color(1.0, 1.0, 1.0, 1.0)
+		return
+
+	invincibility_remaining = maxf(invincibility_remaining - delta, 0.0)
+	flash_timer += delta
+	if flash_timer >= 0.08:
+		flash_timer = 0.0
+		flash_visible_state = not flash_visible_state
+		sprite.modulate = Color(1.0, 1.0, 1.0, 1.0 if flash_visible_state else 0.35)
+
+	if invincibility_remaining <= 0.0:
+		flash_visible_state = true
+		sprite.modulate = Color(1.0, 1.0, 1.0, 1.0)
+
+func _update_contact_damage(delta: float) -> void:
+	if contact_damage_sources.is_empty():
+		contact_damage_tick_remaining = 0.0
+		return
+
+	contact_damage_tick_remaining = maxf(contact_damage_tick_remaining - delta, 0.0)
+	if contact_damage_tick_remaining > 0.0:
+		return
+
+	take_damage(contact_damage_amount)
+	contact_damage_tick_remaining = contact_damage_interval
+
+func _on_hurtbox_area_entered(area: Area2D) -> void:
+	if not _is_enemy_bullet(area):
+		return
+
+	var bullet_damage: int = 1
+	var damage_value: Variant = area.get("damage")
+	if typeof(damage_value) in [TYPE_INT, TYPE_FLOAT]:
+		bullet_damage = maxi(int(damage_value), 1)
+
+	take_damage(bullet_damage)
+	area.queue_free()
+
+func _on_contact_body_entered(body: Node2D) -> void:
+	if _is_enemy_contact_source(body):
+		contact_damage_sources[body.get_instance_id()] = body
+		contact_damage_tick_remaining = 0.0
+
+func _on_contact_body_exited(body: Node2D) -> void:
+	contact_damage_sources.erase(body.get_instance_id())
+
+func _on_contact_area_entered(area: Area2D) -> void:
+	if _is_enemy_contact_source(area):
+		contact_damage_sources[area.get_instance_id()] = area
+		contact_damage_tick_remaining = 0.0
+
+func _on_contact_area_exited(area: Area2D) -> void:
+	contact_damage_sources.erase(area.get_instance_id())
+
+func _is_enemy_bullet(area: Area2D) -> bool:
+	return (area.collision_layer & (1 << 3)) != 0
+
+func _is_enemy_contact_source(node: Node) -> bool:
+	if not node is CollisionObject2D:
+		return false
+	var collision_object := node as CollisionObject2D
+	return (collision_object.collision_layer & (1 << 2)) != 0

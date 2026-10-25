@@ -14,6 +14,9 @@ const ROOM_HEIGHT := 24
 @onready var overhead_layer: TileMapLayer = $Overhead
 @onready var player: PlayerController = $Player
 @onready var stamina_ring: StaminaRing = $Hud/StaminaRing
+@onready var cells_label: Label = $Hud/DebugPanel/MarginContainer/Rows/CellsLabel
+@onready var coolant_label: Label = $Hud/DebugPanel/MarginContainer/Rows/CoolantLabel
+@onready var death_label: Label = $Hud/DebugPanel/MarginContainer/Rows/DeathLabel
 
 func _ready() -> void:
 	y_sort_enabled = true
@@ -33,6 +36,7 @@ func _ready() -> void:
 	_paint_overhead()
 	_apply_camera_limits()
 	_connect_stamina_ui()
+	_connect_player_debug_ui()
 
 func _build_tileset() -> TileSet:
 	var tile_set := TileSet.new()
@@ -99,3 +103,21 @@ func _connect_stamina_ui() -> void:
 
 func _on_stamina_changed(current: float, maximum: float) -> void:
 	stamina_ring.set_stamina(current, maximum)
+
+func _connect_player_debug_ui() -> void:
+	player.cells_changed.connect(_on_cells_changed)
+	player.coolant_changed.connect(_on_coolant_changed)
+	player.player_died.connect(_on_player_died)
+	_on_cells_changed(player.current_cells, player.max_cells)
+	_on_coolant_changed(player.coolant_count)
+
+func _on_cells_changed(current: int, maximum: int) -> void:
+	cells_label.text = "Cells: %d/%d" % [current, maximum]
+	if current > 0:
+		death_label.text = ""
+
+func _on_coolant_changed(current: int) -> void:
+	coolant_label.text = "Coolant: %d" % current
+
+func _on_player_died() -> void:
+	death_label.text = "SYSTEM FAILURE"

@@ -17,6 +17,7 @@ func _ready() -> void:
 	y_sort_enabled = true
 	objects_layer.y_sort_enabled = true
 	overhead_layer.z_index = 10
+	objects_layer.collision_enabled = true
 
 	var tile_set := _build_tileset()
 	ground_layer.tile_set = tile_set
@@ -47,7 +48,7 @@ func _build_tileset() -> TileSet:
 	solid_tile.set_collision_polygon_points(
 		0,
 		0,
-		PackedVector2Array([Vector2(0, 0), Vector2(16, 0), Vector2(16, 16), Vector2(0, 16)])
+		PackedVector2Array([Vector2(-8, -8), Vector2(8, -8), Vector2(8, 8), Vector2(-8, 8)])
 	)
 
 	tile_set.add_source(atlas, TILE_SOURCE_ID)

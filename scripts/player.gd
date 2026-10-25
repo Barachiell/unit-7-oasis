@@ -127,4 +127,4 @@ func _spawn_player_bullet() -> void:
 
 func _try_play_dry_click() -> void:
 	# Audio bus wiring is added in Block 14.
-	pass
+	print("dry_click")

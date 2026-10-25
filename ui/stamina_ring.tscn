@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/stamina_ring_fill.svg" id="3_6imn0"]
 
 [node name="StaminaRing" type="TextureProgressBar"]
+visible = false
 custom_minimum_size = Vector2(74, 74)
 offset_right = 74.0
 offset_bottom = 74.0

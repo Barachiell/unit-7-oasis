@@ -7,7 +7,7 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("shoot"):
-		print("shoot pressed")
+		print(Input.is_action_pressed("shoot"))
 
 func _define_input_actions() -> void:
 	_ensure_action_with_events("move_up", [_key_event(KEY_W), _key_event(KEY_UP)])

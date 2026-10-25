@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://c4tfpnvjstf7v"]
+[gd_scene format=3 uid="uid://c4tfpnvjstf7v"]
 
 [ext_resource type="PackedScene" path="res://scenes/enemies/enemy_base.tscn" id="1_h2bc8"]
 
@@ -10,6 +10,7 @@ telegraph_time = 0.4
 bullet_speed = 170.0
 detection_radius = 170.0
 ammo_drop_amount = 4
+coolant_drop_chance = 0.35
 attack_range = 140.0
 
 [node name="Sprite2D" parent="." index="0"]

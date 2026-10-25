@@ -168,6 +168,13 @@ func add_ammo(amount: int) -> void:
 	current_ammo = mini(current_ammo + amount, max_ammo)
 	ammo_changed.emit(current_ammo, max_ammo)
 
+func add_coolant(amount: int) -> void:
+	if amount <= 0:
+		return
+
+	coolant_count += amount
+	coolant_changed.emit(coolant_count)
+
 func take_bullet_hit(amount: int) -> void:
 	take_damage(maxi(amount, 1))
 

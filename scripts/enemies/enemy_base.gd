@@ -18,6 +18,9 @@ enum EnemyState {
 @export var attack_range: float = 130.0
 @export var bullet_scene: PackedScene = preload("res://scenes/enemies/enemy_bullet.tscn")
 @export var ammo_drop_scene: PackedScene = preload("res://scenes/pickups/ammo_drop.tscn")
+@export var coolant_drop_scene: PackedScene = preload("res://scenes/pickups/coolant_drop.tscn")
+@export_range(0.0, 1.0, 0.01) var coolant_drop_chance: float = 0.15
+@export var coolant_drop_amount: int = 1
 
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var muzzle: Marker2D = $Muzzle
@@ -35,8 +38,10 @@ var patrol_points: Array[Vector2] = []
 var patrol_index: int = 0
 var player: PlayerController
 var is_player_in_detection: bool = false
+var rng := RandomNumberGenerator.new()
 
 func _ready() -> void:
+	rng.randomize()
 	current_health = max_health
 	_configure_detection_radius()
 	_collect_patrol_points()
@@ -192,6 +197,7 @@ func _apply_hit(amount: int) -> void:
 func _die() -> void:
 	_spawn_death_effect()
 	_spawn_ammo_drop()
+	_try_spawn_coolant_drop()
 	queue_free()
 
 func _spawn_death_effect() -> void:
@@ -222,6 +228,20 @@ func _spawn_ammo_drop() -> void:
 	ammo_drop.amount = ammo_drop_amount
 	ammo_drop.global_position = global_position
 	get_tree().current_scene.add_child(ammo_drop)
+
+func _try_spawn_coolant_drop() -> void:
+	if coolant_drop_scene == null or coolant_drop_chance <= 0.0:
+		return
+	if rng.randf() > coolant_drop_chance:
+		return
+
+	var drop_instance := coolant_drop_scene.instantiate()
+	if not drop_instance is CoolantDrop:
+		return
+	var coolant_drop := drop_instance as CoolantDrop
+	coolant_drop.amount = coolant_drop_amount
+	coolant_drop.global_position = global_position + Vector2(6, -4)
+	get_tree().current_scene.add_child(coolant_drop)
 
 func _on_detection_body_entered(body: Node2D) -> void:
 	if body is PlayerController:

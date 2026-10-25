@@ -171,7 +171,7 @@ func _spawn_enemy_bullet() -> void:
 	var bullet := bullet_instance as Area2D
 
 	var shoot_direction := (player.global_position - global_position).normalized()
-	bullet.global_position = muzzle.global_position
+	bullet.global_position = muzzle.global_position + shoot_direction * 8.0
 	bullet.rotation = shoot_direction.angle()
 	bullet.set("direction", shoot_direction)
 	bullet.set("speed", bullet_speed)

@@ -20,16 +20,24 @@ func _physics_process(delta: float) -> void:
 		queue_free()
 
 func _on_hit_body(body: Node2D) -> void:
-	if body is CollisionObject2D and _can_damage_target(body as CollisionObject2D) and body.has_method("take_bullet_hit"):
+	if not body is CollisionObject2D:
+		return
+
+	var collision_body := body as CollisionObject2D
+	var is_world_collision := (collision_body.collision_layer & (1 << 4)) != 0
+	if _can_damage_target(collision_body) and body.has_method("take_bullet_hit"):
 		body.call("take_bullet_hit", damage)
-	queue_free()
+		queue_free()
+	elif is_world_collision:
+		queue_free()
 
 func _on_hit_area(area: Area2D) -> void:
 	if _can_damage_target(area) and area.has_method("take_bullet_hit"):
 		area.call("take_bullet_hit", damage)
+		queue_free()
 	elif area.get_parent() is CollisionObject2D and _can_damage_target(area.get_parent() as CollisionObject2D) and area.get_parent().has_method("take_bullet_hit"):
 		area.get_parent().call("take_bullet_hit", damage)
-	queue_free()
+		queue_free()
 
 func _can_damage_target(target: CollisionObject2D) -> bool:
 	if damageable_layers == 0:

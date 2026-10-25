@@ -43,6 +43,8 @@ func _build_tileset() -> TileSet:
 	for tile_x in range(4):
 		atlas.create_tile(Vector2i(tile_x, 0))
 
+	tile_set.add_source(atlas, TILE_SOURCE_ID)
+
 	var solid_tile := atlas.get_tile_data(TILE_SOLID, 0)
 	solid_tile.set_collision_polygons_count(0, 1)
 	solid_tile.set_collision_polygon_points(
@@ -51,7 +53,6 @@ func _build_tileset() -> TileSet:
 		PackedVector2Array([Vector2(-8, -8), Vector2(8, -8), Vector2(8, 8), Vector2(-8, 8)])
 	)
 
-	tile_set.add_source(atlas, TILE_SOURCE_ID)
 	return tile_set
 
 func _paint_ground() -> void:

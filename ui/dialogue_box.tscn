@@ -1,0 +1,51 @@
+[gd_scene load_steps=2 format=3 uid="uid://by6g5fjbpo0w0"]
+
+[ext_resource type="Script" path="res://scripts/ui/dialogue_box.gd" id="1_8unxg"]
+
+[node name="DialogueBox" type="CanvasLayer"]
+visible = false
+script = ExtResource("1_8unxg")
+
+[node name="BottomContainer" type="MarginContainer" parent="."]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -142.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="Panel" type="PanelContainer" parent="BottomContainer"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 130)
+
+[node name="MarginContainer" type="MarginContainer" parent="BottomContainer/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="Rows" type="VBoxContainer" parent="BottomContainer/Panel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="SpeakerLabel" type="Label" parent="BottomContainer/Panel/MarginContainer/Rows"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "SPEAKER"
+
+[node name="DialogueText" type="RichTextLabel" parent="BottomContainer/Panel/MarginContainer/Rows"]
+layout_mode = 2
+bbcode_enabled = false
+fit_content = true
+scroll_active = false
+text = ""
+
+[node name="HintLabel" type="Label" parent="BottomContainer/Panel/MarginContainer/Rows"]
+layout_mode = 2
+text = "E / Enter: Next"
+horizontal_alignment = 2

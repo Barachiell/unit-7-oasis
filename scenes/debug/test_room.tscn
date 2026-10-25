@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://drfvvq47h2qon"]
+[gd_scene format=3 uid="uid://drfvvq47h2qon"]
 
 [ext_resource type="Script" path="res://scripts/debug/test_room_setup.gd" id="1_hdn7g"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_vo6ru"]

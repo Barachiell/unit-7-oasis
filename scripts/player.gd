@@ -67,6 +67,7 @@ func _physics_process(delta: float) -> void:
 	_try_use_coolant()
 
 func _ready() -> void:
+	add_to_group("player")
 	current_stamina = max_stamina
 	current_ammo = max_ammo
 	current_cells = max_cells
@@ -159,6 +160,16 @@ func _spawn_player_bullet() -> void:
 func _try_play_dry_click() -> void:
 	# Audio bus wiring is added in Block 14.
 	print("dry_click")
+
+func add_ammo(amount: int) -> void:
+	if amount <= 0:
+		return
+
+	current_ammo = mini(current_ammo + amount, max_ammo)
+	ammo_changed.emit(current_ammo, max_ammo)
+
+func take_bullet_hit(amount: int) -> void:
+	take_damage(maxi(amount, 1))
 
 func take_damage(amount: int) -> void:
 	if amount <= 0 or invincibility_remaining > 0.0 or current_cells <= 0:

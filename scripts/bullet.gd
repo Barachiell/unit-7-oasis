@@ -19,7 +19,13 @@ func _physics_process(delta: float) -> void:
 		queue_free()
 
 func _on_hit_body(_body: Node2D) -> void:
+	if _body.has_method("take_bullet_hit"):
+		_body.call("take_bullet_hit", damage)
 	queue_free()
 
-func _on_hit_area(_area: Area2D) -> void:
+func _on_hit_area(area: Area2D) -> void:
+	if area.has_method("take_bullet_hit"):
+		area.call("take_bullet_hit", damage)
+	elif area.get_parent() != null and area.get_parent().has_method("take_bullet_hit"):
+		area.get_parent().call("take_bullet_hit", damage)
 	queue_free()

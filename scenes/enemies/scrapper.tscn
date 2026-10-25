@@ -1,0 +1,24 @@
+[gd_scene load_steps=2 format=3 uid="uid://dbnbfp6f8bgbp"]
+
+[ext_resource type="PackedScene" path="res://scenes/enemies/enemy_base.tscn" id="1_1x3n2"]
+
+[node name="Scrapper" instance=ExtResource("1_1x3n2")]
+max_health = 1
+move_speed = 64.0
+fire_rate = 1.6
+telegraph_time = 0.6
+bullet_speed = 130.0
+detection_radius = 150.0
+ammo_drop_amount = 3
+attack_range = 125.0
+
+[node name="Sprite2D" parent="." index="0"]
+modulate = Color(0.784314, 0.572549, 0.266667, 1)
+
+[node name="PatrolPoints" parent="." index="8"]
+
+[node name="PointA" type="Marker2D" parent="PatrolPoints"]
+position = Vector2(-24, 0)
+
+[node name="PointB" type="Marker2D" parent="PatrolPoints"]
+position = Vector2(24, 0)

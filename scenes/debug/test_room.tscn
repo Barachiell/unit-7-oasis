@@ -1,8 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://drfvvq47h2qon"]
+[gd_scene load_steps=7 format=3 uid="uid://drfvvq47h2qon"]
 
 [ext_resource type="Script" path="res://scripts/debug/test_room_setup.gd" id="1_hdn7g"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_vo6ru"]
 [ext_resource type="PackedScene" path="res://ui/stamina_ring.tscn" id="3_sy0f0"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/scrapper.tscn" id="4_qs5pp"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/hauler.tscn" id="5_jnq1q"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hazard"]
 size = Vector2(34, 34)
@@ -31,6 +33,12 @@ shape = SubResource("RectangleShape2D_hazard")
 [node name="Polygon2D" type="Polygon2D" parent="TestHazard"]
 color = Color(0.901961, 0.2, 0.2, 0.5)
 polygon = PackedVector2Array(-17, -17, 17, -17, 17, 17, -17, 17)
+
+[node name="Scrapper" parent="." instance=ExtResource("4_qs5pp")]
+position = Vector2(438, 161)
+
+[node name="Hauler" parent="." instance=ExtResource("5_jnq1q")]
+position = Vector2(471, 254)
 
 [node name="Hud" type="CanvasLayer" parent="."]
 

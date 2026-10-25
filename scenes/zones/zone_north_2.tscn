@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://bohhxi7vko4k0"]
+[gd_scene format=3 uid="uid://bohhxi7vko4k0"]
 
 [ext_resource type="Script" path="res://scripts/zones/zone_runtime.gd" id="1_31c0d"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_3ob7h"]
@@ -29,7 +29,7 @@ position = Vector2(120, 220)
 position = Vector2(120, 220)
 
 [node name="Spawn_from_west" type="Marker2D" parent="SpawnPoints"]
-position = Vector2(120, 220)
+position = Vector2(368, 430)
 
 [node name="Entities" type="Node2D" parent="."]
 

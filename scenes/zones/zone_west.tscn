@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://dxf7btwcq4m8t"]
+[gd_scene format=3 uid="uid://dxf7btwcq4m8t"]
 
 [ext_resource type="Script" path="res://scripts/zones/zone_runtime.gd" id="1_6d2ou"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_6apwb"]
@@ -29,7 +29,7 @@ position = Vector2(120, 220)
 position = Vector2(120, 220)
 
 [node name="Spawn_from_north_1" type="Marker2D" parent="SpawnPoints"]
-position = Vector2(120, 220)
+position = Vector2(650, 240)
 
 [node name="Spawn_from_north_2" type="Marker2D" parent="SpawnPoints"]
 position = Vector2(120, 220)
@@ -56,7 +56,7 @@ shape = SubResource("RectangleShape2D_exit_open")
 [node name="ExitToNorth2" parent="Triggers" instance=ExtResource("3_15y2g")]
 target_zone = "res://scenes/zones/zone_north_2.tscn"
 target_spawn_id = "from_west"
-position = Vector2(720, 240)
+position = Vector2(368, 16)
 
 [node name="CollisionShape2D" parent="Triggers/ExitToNorth2" index="0"]
 shape = SubResource("RectangleShape2D_exit_open")

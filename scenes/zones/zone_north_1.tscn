@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://bi1t83v4o6res"]
+[gd_scene format=3 uid="uid://bi1t83v4o6res"]
 
 [ext_resource type="Script" path="res://scripts/zones/zone_runtime.gd" id="1_2b1fk"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_h674c"]
@@ -32,7 +32,7 @@ position = Vector2(120, 220)
 position = Vector2(120, 220)
 
 [node name="Spawn_from_west" type="Marker2D" parent="SpawnPoints"]
-position = Vector2(120, 220)
+position = Vector2(650, 240)
 
 [node name="Entities" type="Node2D" parent="."]
 
@@ -56,7 +56,7 @@ shape = SubResource("RectangleShape2D_exit_open")
 [node name="ExitToWest" parent="Triggers" instance=ExtResource("3_0e2mn")]
 target_zone = "res://scenes/zones/zone_west.tscn"
 target_spawn_id = "from_north_1"
-position = Vector2(720, 240)
+position = Vector2(32, 240)
 
 [node name="CollisionShape2D" parent="Triggers/ExitToWest" index="0"]
 shape = SubResource("RectangleShape2D_exit_open")

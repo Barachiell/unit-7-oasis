@@ -33,6 +33,7 @@ var is_transitioning: bool = false
 var is_restart_pending: bool = false
 
 func _ready() -> void:
+	zone_data = _load_zone_data()
 	_setup_hud_state()
 	_setup_tilemaps()
 	_paint_zone()
@@ -147,6 +148,33 @@ func _paint_zone() -> void:
 	for x in range(10, 17):
 		overhead_layer.set_cell(Vector2i(x, 7), TILE_SOURCE_ID, TILE_OVERHEAD)
 
+	_paint_zone_obstacles_from_data()
+
+func _paint_zone_obstacles_from_data() -> void:
+	var config: Variant = zone_data.get(zone_id, {})
+	if not config is Dictionary:
+		return
+	var obstacle_config: Variant = (config as Dictionary).get("obstacles", [])
+	if not obstacle_config is Array:
+		return
+
+	for obstacle in obstacle_config:
+		if not obstacle is Dictionary:
+			continue
+		_paint_solid_rect(obstacle as Dictionary)
+
+func _paint_solid_rect(obstacle: Dictionary) -> void:
+	var start_x := int(obstacle.get("x", 0))
+	var start_y := int(obstacle.get("y", 0))
+	var width := max(int(obstacle.get("w", 1)), 1)
+	var height := max(int(obstacle.get("h", 1)), 1)
+
+	for x in range(start_x, start_x + width):
+		for y in range(start_y, start_y + height):
+			if x <= 0 or y <= 0 or x >= room_width - 1 or y >= room_height - 1:
+				continue
+			objects_layer.set_cell(Vector2i(x, y), TILE_SOURCE_ID, TILE_SOLID)
+
 func _position_player_from_spawn() -> void:
 	var game_manager: Node = get_node("/root/GameManager")
 	var spawn_id: String = game_manager.pending_spawn_id
@@ -176,7 +204,6 @@ func _connect_player_signals() -> void:
 	player.ammo_changed.connect(_sync_state_to_game_manager)
 
 func _spawn_zone_enemies() -> void:
-	zone_data = _load_zone_data()
 	var config: Variant = zone_data.get(zone_id, {})
 	if not config is Dictionary:
 		return

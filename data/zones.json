@@ -1,19 +1,39 @@
 {
   "village": {
-    "enemies": []
+    "enemies": [],
+    "obstacles": [
+      { "x": 18, "y": 16, "w": 6, "h": 2 },
+      { "x": 29, "y": 10, "w": 4, "h": 3 }
+    ]
   },
   "zone_north_1": {
     "enemies": [
       { "type": "Scrapper", "x": 510, "y": 180 },
       { "type": "Scrapper", "x": 390, "y": 260 },
-      { "type": "Scrapper", "x": 600, "y": 300 }
+      { "type": "Scrapper", "x": 600, "y": 300 },
+      { "type": "Scrapper", "x": 470, "y": 320 },
+      { "type": "Scrapper", "x": 560, "y": 220 }
+    ],
+    "obstacles": [
+      { "x": 8, "y": 12, "w": 5, "h": 2 },
+      { "x": 22, "y": 8, "w": 3, "h": 4 },
+      { "x": 30, "y": 15, "w": 7, "h": 2 },
+      { "x": 36, "y": 20, "w": 4, "h": 3 }
     ]
   },
   "zone_west": {
     "enemies": [
       { "type": "Scrapper", "x": 540, "y": 200 },
       { "type": "Scrapper", "x": 410, "y": 250 },
-      { "type": "Hauler", "x": 620, "y": 280 }
+      { "type": "Hauler", "x": 620, "y": 280 },
+      { "type": "Scrapper", "x": 520, "y": 320 },
+      { "type": "Hauler", "x": 460, "y": 170 }
+    ],
+    "obstacles": [
+      { "x": 10, "y": 9, "w": 6, "h": 2 },
+      { "x": 18, "y": 18, "w": 4, "h": 3 },
+      { "x": 27, "y": 11, "w": 5, "h": 2 },
+      { "x": 33, "y": 22, "w": 6, "h": 2 }
     ]
   },
   "zone_north_2": {
@@ -21,7 +41,15 @@
       { "type": "Hauler", "x": 520, "y": 190 },
       { "type": "Hauler", "x": 620, "y": 280 },
       { "type": "Hauler", "x": 430, "y": 250 },
-      { "type": "Scrapper", "x": 560, "y": 330 }
+      { "type": "Scrapper", "x": 560, "y": 330 },
+      { "type": "Hauler", "x": 510, "y": 340 },
+      { "type": "Scrapper", "x": 640, "y": 220 }
+    ],
+    "obstacles": [
+      { "x": 7, "y": 10, "w": 7, "h": 2 },
+      { "x": 16, "y": 20, "w": 5, "h": 2 },
+      { "x": 24, "y": 13, "w": 6, "h": 3 },
+      { "x": 35, "y": 17, "w": 5, "h": 3 }
     ]
   }
 }

@@ -12,14 +12,11 @@ const ROOM_HEIGHT := 24
 @onready var detail_layer: TileMapLayer = $GroundDetail
 @onready var objects_layer: TileMapLayer = $Objects
 @onready var overhead_layer: TileMapLayer = $Overhead
-@onready var player: CharacterBody2D = $Player
 
 func _ready() -> void:
 	y_sort_enabled = true
 	objects_layer.y_sort_enabled = true
 	overhead_layer.z_index = 10
-	player.y_sort_enabled = true
-	player.y_sort_origin = 8
 
 	var tile_set := _build_tileset()
 	ground_layer.tile_set = tile_set

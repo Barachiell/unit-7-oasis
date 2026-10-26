@@ -60,6 +60,15 @@ func resolve_texture(visual_state: int, direction: Vector2) -> Texture2D:
 	if texture != null:
 		return texture
 
+	# Some enemy sprite sets only provide a subset of states (e.g. no
+	# dedicated walking frames). Fall back to the standing pose for the
+	# same direction instead of treating it as an error.
+	if state_folder != "standing":
+		var standing_key: String = "standing/%s" % octant_name
+		var standing_texture: Texture2D = _load_texture(standing_key)
+		if standing_texture != null:
+			return standing_texture
+
 	push_error("Missing enemy sprite texture for key: %s under %s" % [texture_key, _asset_root])
 	return _load_texture(FALLBACK_TEXTURE_KEY)
 

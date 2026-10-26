@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://dbov4amr1pl72"]
 
 [ext_resource type="Script" path="res://scripts/enemies/coolant_drop.gd" id="1_jj4vk"]
-[ext_resource type="Texture2D" path="res://icon.svg" id="2_k8t9x"]
+[ext_resource type="Texture2D" path="res://assets/sprites/pickups/coolant_drop.png" id="2_pj8q4"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_c4bvh"]
 radius = 5.0
@@ -12,9 +12,9 @@ collision_mask = 1
 script = ExtResource("1_jj4vk")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-modulate = Color(0.282353, 0.941176, 1, 1)
-scale = Vector2(0.06, 0.06)
-texture = ExtResource("2_k8t9x")
+modulate = Color(1, 1, 1, 1)
+scale = Vector2(0.12, 0.12)
+texture = ExtResource("2_pj8q4")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_c4bvh")

@@ -24,6 +24,7 @@ const LOCKED_EXIT_HINT_DURATION: float = 2.0
 @onready var spawn_points: Node2D = $SpawnPoints
 @onready var entities: Node2D = $Entities
 @onready var stamina_ring: StaminaRing = $Hud/StaminaRing
+@onready var life_bar: Control = $Hud/LifeBar
 @onready var cells_label: Label = $Hud/StatusRowPanel/MarginContainer/StatsRow/CellsLabel
 @onready var ammo_label: Label = $Hud/StatusRowPanel/MarginContainer/StatsRow/AmmoLabel
 @onready var coolant_label: Label = $Hud/StatusRowPanel/MarginContainer/StatsRow/CoolantLabel
@@ -37,6 +38,7 @@ var zone_data: Dictionary = {}
 var is_transitioning: bool = false
 var is_restart_pending: bool = false
 var locked_exit_hint_token: int = 0
+var paused_hostile_modes: Dictionary = {}
 
 func _ready() -> void:
 	zone_data = _load_zone_data()
@@ -90,6 +92,10 @@ func on_axion_component_collected(component_id: String, dialogue_id: String) -> 
 	if not was_collected:
 		return
 
+	var should_pause_hostiles: bool = dialogue_id != "" or game_manager.components_collected >= 3
+	if should_pause_hostiles:
+		_set_hostiles_paused(true)
+
 	_update_hud_text()
 	if dialogue_id != "":
 		await _show_dialogue(dialogue_id)
@@ -97,9 +103,14 @@ func on_axion_component_collected(component_id: String, dialogue_id: String) -> 
 
 	if game_manager.components_collected >= 3:
 		await _show_dialogue("ending_return")
+		_set_hostiles_paused(false)
 		await _fade_to_black(0.35, 1.0)
 		game_manager.reset_run_state()
 		get_tree().change_scene_to_file(game_manager.MAIN_MENU_SCENE_PATH)
+		return
+
+	if should_pause_hostiles:
+		_set_hostiles_paused(false)
 
 func apply_overhead_depth() -> void:
 	y_sort_enabled = true
@@ -237,6 +248,8 @@ func _on_stamina_changed(current: float, maximum: float) -> void:
 
 func _on_cells_changed(current: int, maximum: int) -> void:
 	cells_label.text = "Cells: %d/%d" % [current, maximum]
+	if life_bar != null and life_bar.has_method("set_lives"):
+		life_bar.call("set_lives", current, maximum)
 
 func _on_coolant_changed(current: int) -> void:
 	coolant_label.text = "Coolant: %d" % current
@@ -318,6 +331,27 @@ func _show_dialogue(dialogue_id: String) -> void:
 		var finished_id: String = await dialogue_manager.dialogue_finished
 		if finished_id == dialogue_id:
 			return
+
+func _set_hostiles_paused(paused: bool) -> void:
+	if paused:
+		paused_hostile_modes.clear()
+		for group_name in ["enemy", "enemy_projectile"]:
+			for hostile_variant in get_tree().get_nodes_in_group(group_name):
+				if not hostile_variant is Node:
+					continue
+				var hostile: Node = hostile_variant as Node
+				paused_hostile_modes[hostile] = hostile.process_mode
+				hostile.process_mode = Node.PROCESS_MODE_DISABLED
+		return
+
+	for hostile_variant in paused_hostile_modes.keys():
+		if not hostile_variant is Node:
+			continue
+		var hostile: Node = hostile_variant as Node
+		if not is_instance_valid(hostile):
+			continue
+		hostile.process_mode = int(paused_hostile_modes.get(hostile_variant, Node.PROCESS_MODE_INHERIT))
+	paused_hostile_modes.clear()
 
 func _try_show_intro_dialogue() -> void:
 	if intro_dialogue_id.is_empty():

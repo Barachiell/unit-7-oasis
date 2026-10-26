@@ -51,6 +51,9 @@ var lifetime_elapsed: float = 0.0
 @onready var sprite: Sprite2D = $Sprite2D
 
 func _ready() -> void:
+	if sprite_palette == SpritePalette.ENEMY:
+		add_to_group("enemy_projectile")
+
 	_apply_directional_sprite()
 	body_entered.connect(_on_hit_body)
 	area_entered.connect(_on_hit_area)

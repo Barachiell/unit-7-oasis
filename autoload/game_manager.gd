@@ -5,7 +5,7 @@ const RESTART_MODE := "FULL"
 const DEFAULT_ZONE_PATH := "res://scenes/zones/village.tscn"
 const DEFAULT_AMMO := 20
 const DEFAULT_COOLANT_COUNT := 3
-const DEFAULT_CELLS := 5
+const DEFAULT_CELLS := 7
 const DEFAULT_WEAPONS: Array[String] = ["starter_gun"]
 const MAIN_MENU_SCENE_PATH := "res://ui/main_menu.tscn"
 

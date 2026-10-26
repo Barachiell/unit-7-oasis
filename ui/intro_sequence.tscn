@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3]
 
-[ext_resource type="Script" path="res://scripts/ui/intro_sequence.gd" id="1_kra7v"]
+[ext_resource type="Script" path="res://scripts/ui/video_sequence.gd" id="1_kra7v"]
 
 [node name="IntroSequence" type="Control"]
 layout_mode = 3
@@ -12,6 +12,10 @@ grow_vertical = 2
 clip_contents = true
 mouse_filter = 2
 script = ExtResource("1_kra7v")
+video_path = "res://assets/video/oasis_intro.ogv"
+dialogue_id = "intro_opening"
+next_scene_path = "res://scenes/zones/village.tscn"
+resets_run_state_on_exit = true
 
 [node name="Background" type="ColorRect" parent="."]
 layout_mode = 1
@@ -32,7 +36,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="IntroVideoPlayer" type="VideoStreamPlayer" parent="VideoCenter"]
+[node name="VideoPlayer" type="VideoStreamPlayer" parent="VideoCenter"]
 visible = false
 layout_mode = 2
 expand = true

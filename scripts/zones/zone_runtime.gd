@@ -10,6 +10,7 @@ const ZONES_DATA_PATH := "res://data/zones.json"
 const SCRAPPER_SCENE := preload("res://scenes/enemies/scrapper.tscn")
 const HAULER_SCENE := preload("res://scenes/enemies/hauler.tscn")
 const LOCKED_EXIT_HINT_DURATION: float = 2.0
+const ENDING_SCENE_PATH := "res://ui/ending_sequence.tscn"
 
 @export var zone_id: String = ""
 @export var room_width: int = 46
@@ -106,7 +107,7 @@ func on_axion_component_collected(component_id: String, dialogue_id: String) -> 
 		_set_hostiles_paused(false)
 		await _fade_to_black(0.35, 1.0)
 		game_manager.reset_run_state()
-		get_tree().change_scene_to_file(game_manager.MAIN_MENU_SCENE_PATH)
+		get_tree().change_scene_to_file(ENDING_SCENE_PATH)
 		return
 
 	if should_pause_hostiles:

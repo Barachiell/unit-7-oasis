@@ -20,6 +20,9 @@ var pending_spawn_id: String = "start"
 var intro_played: bool = false
 
 func _ready() -> void:
+	get_tree().debug_collisions_hint = false
+	get_tree().debug_navigation_hint = false
+	get_tree().debug_paths_hint = false
 	reset_run_state()
 
 func reset_run_state() -> void:

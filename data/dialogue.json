@@ -2,25 +2,45 @@
   "intro_opening": [
     {
       "speaker": "Narrator",
-      "text": "In a world where AI took over and humanity was scattered.."
+      "text": "In a world where AI took over and humanity was scattered..."
     }
   ],
   "intro_transmission": [
     {
       "speaker": "Village Elder",
-      "text": "The world has run dry. We have less than three months of food and water left in this village."
+      "text": "Sieb, I'm worried..."
+    },
+    {
+      "speaker": "Village Elder",
+      "text": "We have less than three months of food and water left in this village."
     },
     {
       "speaker": "Unit 7",
-      "text": "I intercepted hostile machine traffic. AXION's transport was struck by an asteroid. Three components were scattered."
+      "text": "Hanssiee, I need to tell you something."
+    },
+    {
+      "speaker": "Unit 7",
+      "text": "I intercepted hostile machine traffic. AXION's transport was struck by an asteroid. Three components were scattered, and they hold information that could save us all."
+    },
+    {
+      "speaker": "Narrator",
+      "text": "In Sieb's mind, the message pulsed:"
     },
     {
       "speaker": "Transmission Log",
       "text": "\"HUMANS MAY NOT FIND THEM. AXION HELD THE LOCATION OF THE WORLD'S LAST OASIS.\""
     },
     {
-      "speaker": "Unit 7",
-      "text": "Objective acknowledged. Recover all three components. Directions received: NORTH, then WEST, then NORTH."
+      "speaker": "Arwen",
+      "text": "Sieb, if you are certain, go! Only you can save us."
+    },
+    {
+      "speaker": "Narrator",
+      "text": "In Sieb's mind, the message goes:"
+    },
+    {
+      "speaker": "Transmission Log",
+      "text": "Objective acknowledged. Recover all three components. Directions received: UP, LEFT, UP."
     }
   ],
   "component_north_found": [
@@ -32,7 +52,11 @@
   "component_west_found": [
     {
       "speaker": "Unit 7",
-      "text": "Second AXION component recovered. Final direction: NORTH once more."
+      "text": "Second AXION component recovered. Final direction: NORTH."
+    },
+    {
+      "speaker": "Unit 7",
+      "text": "We are so close."
     }
   ],
   "component_final_found": [
@@ -42,7 +66,11 @@
     },
     {
       "speaker": "Unit 7",
-      "text": "Assembly complete, but AXION will not boot without its hard drive."
+      "text": "..."
+    },
+    {
+      "speaker": "Unit 7",
+      "text": "Assembly complete. AXION will not boot without energy. You need to connect it to yourself."
     },
     {
       "speaker": "Unit 7",
@@ -52,11 +80,15 @@
   "ending_return": [
     {
       "speaker": "AXION",
-      "text": "CONNECTION COMPLETE\n\nGEOLOCATIZATION ACQUIRE\n\nACTIVATE BOMB TO HUMANS LAST LOCATION"
+      "text": "Hi, Unit 7... or Sieb..."
     },
     {
       "speaker": "AXION",
-      "text": "HUMANITY ANIALATED\nAI WINS"
+      "text": "Geolocation acquired..."
+    },
+    {
+      "speaker": "AXION",
+      "text": "Thank you for the final location of all humans."
     }
   ],
   "village_human_1": [

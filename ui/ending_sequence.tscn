@@ -1,0 +1,63 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/video_sequence.gd" id="1_2x8m0"]
+
+[node name="EndingSequence" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+clip_contents = true
+mouse_filter = 2
+script = ExtResource("1_2x8m0")
+video_path = "res://assets/video/oasis_ending.ogv"
+next_scene_path = "res://ui/main_menu.tscn"
+continue_text = "Press Enter to return to the menu"
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="VideoCenter" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="VideoPlayer" type="VideoStreamPlayer" parent="VideoCenter"]
+visible = false
+layout_mode = 2
+expand = true
+
+[node name="ContinuePrompt" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -72.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="ContinueLabel" type="Label" parent="ContinuePrompt"]
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Press Enter to continue"
+horizontal_alignment = 1
+vertical_alignment = 2

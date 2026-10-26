@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://d0kfbbfi2g2e7"]
+[gd_scene format=3 uid="uid://d0kfbbfi2g2e7"]
 
 [ext_resource type="Script" path="res://scripts/pickups/axion_component.gd" id="1_3b6dh"]
 [ext_resource type="Texture2D" path="res://icon.svg" id="2_6x6nl"]

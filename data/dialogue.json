@@ -1,4 +1,10 @@
 {
+  "intro_opening": [
+    {
+      "speaker": "Narrator",
+      "text": "In a world where AI took over and humanity was scattered.."
+    }
+  ],
   "intro_transmission": [
     {
       "speaker": "Village Elder",
@@ -32,17 +38,43 @@
   "component_final_found": [
     {
       "speaker": "Unit 7",
-      "text": "Third component confirmed. AXION reconstruction sequence complete."
+      "text": "Third component confirmed. I will assemble AXION now."
+    },
+    {
+      "speaker": "Unit 7",
+      "text": "Assembly complete, but AXION will not boot without its hard drive."
+    },
+    {
+      "speaker": "Unit 7",
+      "text": "Hard drive connected. Initializing AXION core..."
     }
   ],
   "ending_return": [
     {
       "speaker": "AXION",
-      "text": "Coordinates restored. The last oasis can be reached. Unit 7, return to the village."
+      "text": "CONNECTION COMPLETE\n\nGEOLOCATIZATION ACQUIRE\n\nACTIVATE BOMB TO HUMANS LAST LOCATION"
     },
     {
-      "speaker": "System",
-      "text": "Mission complete. Returning to main menu."
+      "speaker": "AXION",
+      "text": "HUMANITY ANIALATED\nAI WINS"
+    }
+  ],
+  "village_human_1": [
+    {
+      "speaker": "Farmer",
+      "text": "Sieb, the wells are dust. If AXION truly remembers the coordinates, bring them back to us."
+    }
+  ],
+  "village_human_2": [
+    {
+      "speaker": "Mechanic",
+      "text": "Your chassis is still holding. Take these repairs as far as they can carry you."
+    }
+  ],
+  "village_human_3": [
+    {
+      "speaker": "Child",
+      "text": "When you find the oasis, will there be rain?"
     }
   ]
 }

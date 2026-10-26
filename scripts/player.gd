@@ -34,7 +34,10 @@ signal player_died
 @onready var hurtbox: Area2D = $Hurtbox
 @onready var contact_damage_area: Area2D = $ContactDamageArea
 
+@export var aim_facing_hold_duration: float = 0.3
+
 var aim_direction: Vector2 = Vector2.RIGHT
+var facing_direction: Vector2 = Vector2.DOWN
 var current_stamina: float = max_stamina
 var run_locked: bool = false
 var regen_delay_remaining: float = 0.0
@@ -48,11 +51,14 @@ var flash_visible_state: bool = true
 var contact_damage_tick_remaining: float = 0.0
 var contact_damage_sources: Dictionary = {}
 var input_enabled: bool = true
+var shooting_pose_remaining: float = 0.0
+var sprite_director: PlayerSpriteDirector = PlayerSpriteDirector.new()
 
 func _physics_process(delta: float) -> void:
 	if not input_enabled:
 		velocity = Vector2.ZERO
 		move_and_slide()
+		_update_sprite(delta, Vector2.ZERO, 1.0)
 		_update_invincibility(delta)
 		return
 
@@ -70,6 +76,7 @@ func _physics_process(delta: float) -> void:
 	_update_aim_direction()
 	_update_camera_look_ahead(delta)
 	_update_shooting(delta)
+	_update_sprite(delta, movement_direction, speed_multiplier)
 	_update_invincibility(delta)
 	_update_contact_damage(delta)
 	_try_use_coolant()
@@ -141,6 +148,28 @@ func _update_shooting(delta: float) -> void:
 	current_ammo -= 1
 	ammo_changed.emit(current_ammo, max_ammo)
 	fire_cooldown_remaining = fire_rate
+	shooting_pose_remaining = maxf(fire_rate, aim_facing_hold_duration)
+
+func _update_sprite(delta: float, movement_direction: Vector2, speed_multiplier: float) -> void:
+	shooting_pose_remaining = maxf(shooting_pose_remaining - delta, 0.0)
+	var is_moving: bool = movement_direction.length_squared() > 0.0
+	var is_shooting: bool = shooting_pose_remaining > 0.0
+
+	var visual_state: int = PlayerSpriteDirector.VisualState.STANDING
+	if is_shooting:
+		visual_state = PlayerSpriteDirector.VisualState.SHOOTING
+	elif is_moving:
+		visual_state = PlayerSpriteDirector.VisualState.WALKING
+
+	facing_direction = _resolve_facing_direction(movement_direction, is_shooting)
+	sprite.texture = sprite_director.next_texture(delta, visual_state, facing_direction, speed_multiplier)
+
+func _resolve_facing_direction(movement_direction: Vector2, is_shooting: bool) -> Vector2:
+	if is_shooting:
+		return aim_direction
+	if movement_direction.length_squared() > 0.0:
+		return movement_direction
+	return facing_direction
 
 func _spawn_player_bullet() -> void:
 	if bullet_scene == null:
@@ -155,7 +184,6 @@ func _spawn_player_bullet() -> void:
 
 	bullet.global_position = muzzle.global_position
 	bullet.set("direction", aim_direction)
-	bullet.rotation = aim_direction.angle()
 
 	var level_root := get_tree().current_scene
 	if level_root == null:

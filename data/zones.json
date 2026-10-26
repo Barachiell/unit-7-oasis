@@ -8,11 +8,13 @@
   },
   "zone_north_1": {
     "enemies": [
-      { "type": "Scrapper", "x": 510, "y": 180 },
-      { "type": "Scrapper", "x": 390, "y": 260 },
-      { "type": "Scrapper", "x": 600, "y": 300 },
-      { "type": "Scrapper", "x": 470, "y": 320 },
-      { "type": "Scrapper", "x": 560, "y": 220 }
+      { "type": "Scrapper", "x": 610, "y": 120 },
+      { "type": "Scrapper", "x": 670, "y": 142 },
+      { "type": "Scrapper", "x": 540, "y": 220 },
+      { "type": "Scrapper", "x": 440, "y": 300 },
+      { "type": "Scrapper", "x": 570, "y": 330 },
+      { "type": "Scrapper", "x": 340, "y": 180 },
+      { "type": "Scrapper", "x": 260, "y": 280 }
     ],
     "obstacles": [
       { "x": 8, "y": 12, "w": 5, "h": 2 },
@@ -23,11 +25,13 @@
   },
   "zone_west": {
     "enemies": [
-      { "type": "Scrapper", "x": 540, "y": 200 },
-      { "type": "Scrapper", "x": 410, "y": 250 },
-      { "type": "Hauler", "x": 620, "y": 280 },
-      { "type": "Scrapper", "x": 520, "y": 320 },
-      { "type": "Hauler", "x": 460, "y": 170 }
+      { "type": "Scrapper", "x": 170, "y": 360 },
+      { "type": "Hauler", "x": 220, "y": 390 },
+      { "type": "Scrapper", "x": 520, "y": 120 },
+      { "type": "Scrapper", "x": 620, "y": 180 },
+      { "type": "Hauler", "x": 540, "y": 280 },
+      { "type": "Scrapper", "x": 400, "y": 320 },
+      { "type": "Scrapper", "x": 300, "y": 220 }
     ],
     "obstacles": [
       { "x": 10, "y": 9, "w": 6, "h": 2 },
@@ -38,12 +42,14 @@
   },
   "zone_north_2": {
     "enemies": [
-      { "type": "Hauler", "x": 520, "y": 190 },
-      { "type": "Hauler", "x": 620, "y": 280 },
-      { "type": "Hauler", "x": 430, "y": 250 },
-      { "type": "Scrapper", "x": 560, "y": 330 },
-      { "type": "Hauler", "x": 510, "y": 340 },
-      { "type": "Scrapper", "x": 640, "y": 220 }
+      { "type": "Hauler", "x": 135, "y": 104 },
+      { "type": "Hauler", "x": 190, "y": 140 },
+      { "type": "Hauler", "x": 470, "y": 220 },
+      { "type": "Hauler", "x": 580, "y": 260 },
+      { "type": "Hauler", "x": 640, "y": 320 },
+      { "type": "Scrapper", "x": 520, "y": 330 },
+      { "type": "Scrapper", "x": 420, "y": 170 },
+      { "type": "Scrapper", "x": 310, "y": 290 }
     ],
     "obstacles": [
       { "x": 7, "y": 10, "w": 7, "h": 2 },

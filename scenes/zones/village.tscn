@@ -1,8 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://dr8xukmugyssm"]
+[gd_scene load_steps=7 format=3 uid="uid://dr8xukmugyssm"]
 
 [ext_resource type="Script" path="res://scripts/zones/zone_runtime.gd" id="1_kj10h"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_ttn5p"]
 [ext_resource type="PackedScene" path="res://scenes/zones/exit_trigger.tscn" id="3_03by5"]
+[ext_resource type="PackedScene" path="res://scenes/npcs/human_npc.tscn" id="4_h8y6h"]
+[ext_resource type="PackedScene" path="res://ui/stamina_ring.tscn" id="5_cn2vt"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_exit_open"]
 size = Vector2(40, 20)
@@ -28,10 +30,22 @@ position = Vector2(160, 220)
 [node name="Spawn_start" type="Marker2D" parent="SpawnPoints"]
 position = Vector2(120, 220)
 
-[node name="Spawn_from_north_1" type="Marker2D" parent="SpawnPoints"]
-position = Vector2(120, 220)
-
 [node name="Entities" type="Node2D" parent="."]
+
+[node name="HumanNPC1" parent="Entities" instance=ExtResource("4_h8y6h")]
+position = Vector2(250, 220)
+dialogue_id = "village_human_1"
+npc_name = "Farmer"
+
+[node name="HumanNPC2" parent="Entities" instance=ExtResource("4_h8y6h")]
+position = Vector2(272, 248)
+dialogue_id = "village_human_2"
+npc_name = "Mechanic"
+
+[node name="HumanNPC3" parent="Entities" instance=ExtResource("4_h8y6h")]
+position = Vector2(215, 285)
+dialogue_id = "village_human_3"
+npc_name = "Child"
 
 [node name="Pickups" type="Node2D" parent="."]
 
@@ -49,27 +63,64 @@ shape = SubResource("RectangleShape2D_exit_open")
 
 [node name="TopPanel" type="PanelContainer" parent="Hud"]
 offset_left = 12.0
-offset_top = 12.0
-offset_right = 260.0
-offset_bottom = 74.0
+offset_top = 600.0
+offset_right = 316.0
+offset_bottom = 634.0
 
 [node name="MarginContainer" type="MarginContainer" parent="Hud/TopPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 4
 
-[node name="Rows" type="VBoxContainer" parent="Hud/TopPanel/MarginContainer"]
+[node name="Row" type="HBoxContainer" parent="Hud/TopPanel/MarginContainer"]
 layout_mode = 2
+theme_override_constants/separation = 14
 
-[node name="ComponentsLabel" type="Label" parent="Hud/TopPanel/MarginContainer/Rows"]
+[node name="ComponentsLabel" type="Label" parent="Hud/TopPanel/MarginContainer/Row"]
 layout_mode = 2
 text = "AXION: 0/3"
 
-[node name="InfoLabel" type="Label" parent="Hud/TopPanel/MarginContainer/Rows"]
+[node name="InfoLabel" type="Label" parent="Hud/TopPanel/MarginContainer/Row"]
 layout_mode = 2
 text = "Zone: village"
+
+[node name="StaminaRing" parent="Hud" instance=ExtResource("5_cn2vt")]
+offset_left = 14.0
+offset_top = 14.0
+offset_right = 88.0
+offset_bottom = 88.0
+
+[node name="StatusRowPanel" type="PanelContainer" parent="Hud"]
+offset_left = 326.0
+offset_top = 600.0
+offset_right = 628.0
+offset_bottom = 634.0
+texture_filter = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="Hud/StatusRowPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 4
+
+[node name="StatsRow" type="HBoxContainer" parent="Hud/StatusRowPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="CellsLabel" type="Label" parent="Hud/StatusRowPanel/MarginContainer/StatsRow"]
+layout_mode = 2
+text = "Cells: 5/5"
+
+[node name="AmmoLabel" type="Label" parent="Hud/StatusRowPanel/MarginContainer/StatsRow"]
+layout_mode = 2
+text = "Ammo: 20/50"
+
+[node name="CoolantLabel" type="Label" parent="Hud/StatusRowPanel/MarginContainer/StatsRow"]
+layout_mode = 2
+text = "Coolant: 3"
 
 [node name="FadeRect" type="ColorRect" parent="Hud"]
 anchors_preset = 15

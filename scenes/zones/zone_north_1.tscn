@@ -1,9 +1,10 @@
-[gd_scene format=3 uid="uid://bi1t83v4o6res"]
+[gd_scene load_steps=7 format=3 uid="uid://bi1t83v4o6res"]
 
 [ext_resource type="Script" path="res://scripts/zones/zone_runtime.gd" id="1_2b1fk"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_h674c"]
 [ext_resource type="PackedScene" path="res://scenes/zones/exit_trigger.tscn" id="3_0e2mn"]
 [ext_resource type="PackedScene" path="res://scenes/pickups/axion_component.tscn" id="4_vsknn"]
+[ext_resource type="PackedScene" path="res://ui/stamina_ring.tscn" id="5_i3yl4"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_exit_open"]
 size = Vector2(40, 20)
@@ -29,33 +30,23 @@ position = Vector2(120, 220)
 position = Vector2(120, 220)
 
 [node name="Spawn_from_village" type="Marker2D" parent="SpawnPoints"]
-position = Vector2(120, 220)
-
-[node name="Spawn_from_west" type="Marker2D" parent="SpawnPoints"]
-position = Vector2(650, 240)
+position = Vector2(368, 430)
 
 [node name="Entities" type="Node2D" parent="."]
 
 [node name="Pickups" type="Node2D" parent="."]
 
 [node name="Component1" parent="Pickups" instance=ExtResource("4_vsknn")]
-position = Vector2(620, 260)
+position = Vector2(644, 92)
 component_id = "north_component_1"
 pickup_dialogue_id = "component_north_found"
 
 [node name="Triggers" type="Node2D" parent="."]
 
-[node name="ExitToVillage" parent="Triggers" instance=ExtResource("3_0e2mn")]
-target_zone = "res://scenes/zones/village.tscn"
-target_spawn_id = "from_north_1"
-position = Vector2(368, 464)
-
-[node name="CollisionShape2D" parent="Triggers/ExitToVillage" index="0"]
-shape = SubResource("RectangleShape2D_exit_open")
-
 [node name="ExitToWest" parent="Triggers" instance=ExtResource("3_0e2mn")]
 target_zone = "res://scenes/zones/zone_west.tscn"
 target_spawn_id = "from_north_1"
+required_component_id = "north_component_1"
 position = Vector2(32, 240)
 
 [node name="CollisionShape2D" parent="Triggers/ExitToWest" index="0"]
@@ -65,27 +56,64 @@ shape = SubResource("RectangleShape2D_exit_open")
 
 [node name="TopPanel" type="PanelContainer" parent="Hud"]
 offset_left = 12.0
-offset_top = 12.0
-offset_right = 280.0
-offset_bottom = 74.0
+offset_top = 600.0
+offset_right = 316.0
+offset_bottom = 634.0
 
 [node name="MarginContainer" type="MarginContainer" parent="Hud/TopPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 4
 
-[node name="Rows" type="VBoxContainer" parent="Hud/TopPanel/MarginContainer"]
+[node name="Row" type="HBoxContainer" parent="Hud/TopPanel/MarginContainer"]
 layout_mode = 2
+theme_override_constants/separation = 14
 
-[node name="ComponentsLabel" type="Label" parent="Hud/TopPanel/MarginContainer/Rows"]
+[node name="ComponentsLabel" type="Label" parent="Hud/TopPanel/MarginContainer/Row"]
 layout_mode = 2
 text = "AXION: 0/3"
 
-[node name="InfoLabel" type="Label" parent="Hud/TopPanel/MarginContainer/Rows"]
+[node name="InfoLabel" type="Label" parent="Hud/TopPanel/MarginContainer/Row"]
 layout_mode = 2
 text = "Zone: zone_north_1"
+
+[node name="StaminaRing" parent="Hud" instance=ExtResource("5_i3yl4")]
+offset_left = 14.0
+offset_top = 14.0
+offset_right = 88.0
+offset_bottom = 88.0
+
+[node name="StatusRowPanel" type="PanelContainer" parent="Hud"]
+offset_left = 326.0
+offset_top = 600.0
+offset_right = 628.0
+offset_bottom = 634.0
+texture_filter = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="Hud/StatusRowPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 4
+
+[node name="StatsRow" type="HBoxContainer" parent="Hud/StatusRowPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="CellsLabel" type="Label" parent="Hud/StatusRowPanel/MarginContainer/StatsRow"]
+layout_mode = 2
+text = "Cells: 5/5"
+
+[node name="AmmoLabel" type="Label" parent="Hud/StatusRowPanel/MarginContainer/StatsRow"]
+layout_mode = 2
+text = "Ammo: 20/50"
+
+[node name="CoolantLabel" type="Label" parent="Hud/StatusRowPanel/MarginContainer/StatsRow"]
+layout_mode = 2
+text = "Coolant: 3"
 
 [node name="FadeRect" type="ColorRect" parent="Hud"]
 anchors_preset = 15

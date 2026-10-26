@@ -26,7 +26,7 @@ enum EnemyState {
 @onready var muzzle: Marker2D = $Muzzle
 @onready var detection_area: Area2D = $DetectionArea
 @onready var detection_shape: CollisionShape2D = $DetectionArea/CollisionShape2D
-@onready var line_of_sight: RayCast2D = $LineOfSight
+@onready var hurtbox: Area2D = $Hurtbox
 @onready var patrol_points_root: Node2D = $PatrolPoints
 
 var current_state: EnemyState = EnemyState.IDLE
@@ -105,15 +105,14 @@ func _chase_and_attack(delta: float) -> void:
 		return
 
 	var has_line_of_sight := _has_line_of_sight_to_player()
-	if has_line_of_sight and is_player_in_detection:
-		lose_player_timer = 0.0
-	else:
+	if not has_line_of_sight or not is_player_in_detection:
 		lose_player_timer += delta
+		velocity = Vector2.ZERO
 		if lose_player_timer >= lose_player_delay:
 			current_state = EnemyState.PATROL
-			velocity = Vector2.ZERO
-			return
+		return
 
+	lose_player_timer = 0.0
 	var to_player := player.global_position - global_position
 	var distance_to_player := to_player.length()
 	if distance_to_player > attack_range:
@@ -123,9 +122,7 @@ func _chase_and_attack(delta: float) -> void:
 
 	if distance_to_player > 0.001:
 		_face_direction(to_player.normalized())
-
-	if has_line_of_sight and is_player_in_detection:
-		_try_shoot()
+	_try_shoot()
 
 func _face_direction(direction: Vector2) -> void:
 	if direction.length_squared() <= 0.0001:
@@ -139,13 +136,18 @@ func _has_line_of_sight_to_player() -> bool:
 	if player == null:
 		return false
 
-	var to_player := player.global_position - global_position
-	line_of_sight.target_position = to_player
-	line_of_sight.force_raycast_update()
-	if not line_of_sight.is_colliding():
+	var start_point := muzzle.global_position
+	var end_point := player.global_position
+	var query := PhysicsRayQueryParameters2D.create(start_point, end_point)
+	query.collision_mask = (1 << 0) | (1 << 4)
+	query.exclude = [self, detection_area, hurtbox]
+
+	var space_state := get_world_2d().direct_space_state
+	var hit: Dictionary = space_state.intersect_ray(query)
+	if hit.is_empty():
 		return true
 
-	var collider := line_of_sight.get_collider()
+	var collider: Variant = hit.get("collider")
 	return collider == player
 
 func _try_shoot() -> void:
@@ -163,6 +165,10 @@ func _update_telegraph(delta: float) -> void:
 	if telegraph_remaining > 0.0:
 		return
 
+	if not is_player_in_detection or not _has_line_of_sight_to_player():
+		sprite.modulate = Color(1.0, 1.0, 1.0, 1.0)
+		return
+
 	_spawn_enemy_bullet()
 	fire_cooldown_remaining = fire_rate
 	sprite.modulate = Color(1.0, 1.0, 1.0, 1.0)
@@ -178,7 +184,6 @@ func _spawn_enemy_bullet() -> void:
 
 	var shoot_direction := (player.global_position - global_position).normalized()
 	bullet.global_position = muzzle.global_position + shoot_direction * 8.0
-	bullet.rotation = shoot_direction.angle()
 	bullet.set("direction", shoot_direction)
 	bullet.set("speed", bullet_speed)
 

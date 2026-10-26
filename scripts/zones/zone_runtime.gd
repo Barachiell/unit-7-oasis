@@ -9,6 +9,7 @@ const TILE_SIZE := 16
 const ZONES_DATA_PATH := "res://data/zones.json"
 const SCRAPPER_SCENE := preload("res://scenes/enemies/scrapper.tscn")
 const HAULER_SCENE := preload("res://scenes/enemies/hauler.tscn")
+const LOCKED_EXIT_HINT_DURATION: float = 2.0
 
 @export var zone_id: String = ""
 @export var room_width: int = 46
@@ -22,8 +23,12 @@ const HAULER_SCENE := preload("res://scenes/enemies/hauler.tscn")
 @onready var player: PlayerController = $Player
 @onready var spawn_points: Node2D = $SpawnPoints
 @onready var entities: Node2D = $Entities
-@onready var components_label: Label = $Hud/TopPanel/MarginContainer/Rows/ComponentsLabel
-@onready var info_label: Label = $Hud/TopPanel/MarginContainer/Rows/InfoLabel
+@onready var stamina_ring: StaminaRing = $Hud/StaminaRing
+@onready var cells_label: Label = $Hud/StatusRowPanel/MarginContainer/StatsRow/CellsLabel
+@onready var ammo_label: Label = $Hud/StatusRowPanel/MarginContainer/StatsRow/AmmoLabel
+@onready var coolant_label: Label = $Hud/StatusRowPanel/MarginContainer/StatsRow/CoolantLabel
+@onready var components_label: Label = $Hud/TopPanel/MarginContainer/Row/ComponentsLabel
+@onready var info_label: Label = $Hud/TopPanel/MarginContainer/Row/InfoLabel
 @onready var fade_rect: ColorRect = $Hud/FadeRect
 @onready var death_overlay: Control = $Hud/DeathOverlay
 @onready var reboot_button: Button = $Hud/DeathOverlay/PanelContainer/MarginContainer/Rows/RebootButton
@@ -31,6 +36,7 @@ const HAULER_SCENE := preload("res://scenes/enemies/hauler.tscn")
 var zone_data: Dictionary = {}
 var is_transitioning: bool = false
 var is_restart_pending: bool = false
+var locked_exit_hint_token: int = 0
 
 func _ready() -> void:
 	zone_data = _load_zone_data()
@@ -41,6 +47,7 @@ func _ready() -> void:
 	_position_player_from_spawn()
 	_apply_camera_limits()
 	_connect_player_signals()
+	_refresh_runtime_hud()
 	_spawn_zone_enemies()
 	_update_hud_text()
 	_sync_state_to_game_manager()
@@ -61,6 +68,18 @@ func request_zone_change(target_zone: String, target_spawn_id: String) -> void:
 	await _fade_to_black(0.35, 1.0)
 	var game_manager: Node = get_node("/root/GameManager")
 	game_manager.change_zone(target_zone, target_spawn_id)
+
+func show_locked_exit_hint(_required_component_id: String = "") -> void:
+	var game_manager: Node = get_node("/root/GameManager")
+	var next_piece_number: int = clampi(game_manager.components_collected + 1, 1, 3)
+	info_label.text = "You need to acquire the AXION piece %d/3 to proceed." % next_piece_number
+
+	locked_exit_hint_token += 1
+	var hint_token: int = locked_exit_hint_token
+	await get_tree().create_timer(LOCKED_EXIT_HINT_DURATION).timeout
+	if hint_token != locked_exit_hint_token:
+		return
+	_update_hud_text()
 
 func on_axion_component_collected(component_id: String, dialogue_id: String) -> void:
 	var game_manager: Node = get_node("/root/GameManager")
@@ -199,9 +218,31 @@ func _apply_camera_limits() -> void:
 
 func _connect_player_signals() -> void:
 	player.player_died.connect(_on_player_died)
+	player.stamina_changed.connect(_on_stamina_changed)
+	player.cells_changed.connect(_on_cells_changed)
+	player.coolant_changed.connect(_on_coolant_changed)
+	player.ammo_changed.connect(_on_ammo_changed)
 	player.cells_changed.connect(_sync_state_to_game_manager)
 	player.coolant_changed.connect(_sync_state_to_game_manager)
 	player.ammo_changed.connect(_sync_state_to_game_manager)
+
+func _refresh_runtime_hud() -> void:
+	_on_stamina_changed(player.current_stamina, player.max_stamina)
+	_on_cells_changed(player.current_cells, player.max_cells)
+	_on_coolant_changed(player.coolant_count)
+	_on_ammo_changed(player.current_ammo, player.max_ammo)
+
+func _on_stamina_changed(current: float, maximum: float) -> void:
+	stamina_ring.set_stamina(current, maximum)
+
+func _on_cells_changed(current: int, maximum: int) -> void:
+	cells_label.text = "Cells: %d/%d" % [current, maximum]
+
+func _on_coolant_changed(current: int) -> void:
+	coolant_label.text = "Coolant: %d" % current
+
+func _on_ammo_changed(current: int, maximum: int) -> void:
+	ammo_label.text = "Ammo: %d/%d" % [current, maximum]
 
 func _spawn_zone_enemies() -> void:
 	var config: Variant = zone_data.get(zone_id, {})

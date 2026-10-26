@@ -28,8 +28,6 @@ const DEFAULT_FACING_DIRECTION := Vector2.DOWN
 
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var muzzle: Marker2D = $Muzzle
-@onready var detection_area: Area2D = $DetectionArea
-@onready var detection_shape: CollisionShape2D = $DetectionArea/CollisionShape2D
 @onready var hurtbox: Area2D = $Hurtbox
 @onready var patrol_points_root: Node2D = $PatrolPoints
 
@@ -50,17 +48,15 @@ func _ready() -> void:
 	add_to_group("enemy")
 	rng.randomize()
 	current_health = max_health
-	_configure_detection_radius()
 	_collect_patrol_points()
 	current_state = EnemyState.PATROL if not patrol_points.is_empty() else EnemyState.IDLE
-	detection_area.body_entered.connect(_on_detection_body_entered)
-	detection_area.body_exited.connect(_on_detection_body_exited)
 	player = get_tree().get_first_node_in_group("player") as PlayerController
 	_configure_sprite_director()
 
 func _physics_process(delta: float) -> void:
 	if player == null or not is_instance_valid(player):
 		player = get_tree().get_first_node_in_group("player") as PlayerController
+	is_player_in_detection = _is_player_within_detection_radius()
 
 	fire_cooldown_remaining = maxf(fire_cooldown_remaining - delta, 0.0)
 	_update_telegraph(delta)
@@ -80,16 +76,17 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	_update_sprite(delta)
 
-func _configure_detection_radius() -> void:
-	var circle := detection_shape.shape as CircleShape2D
-	if circle != null:
-		circle.radius = detection_radius
-
 func _collect_patrol_points() -> void:
 	patrol_points.clear()
 	for child in patrol_points_root.get_children():
 		if child is Marker2D:
 			patrol_points.append((child as Marker2D).global_position)
+
+func _is_player_within_detection_radius() -> bool:
+	if player == null:
+		return false
+
+	return global_position.distance_squared_to(player.global_position) <= detection_radius * detection_radius
 
 func _patrol() -> void:
 	if patrol_points.is_empty():
@@ -169,7 +166,7 @@ func _has_line_of_sight_to_player() -> bool:
 	var end_point := player.global_position
 	var query := PhysicsRayQueryParameters2D.create(start_point, end_point)
 	query.collision_mask = (1 << 0) | (1 << 4)
-	query.exclude = [self, detection_area, hurtbox]
+	query.exclude = [self, hurtbox]
 
 	var space_state := get_world_2d().direct_space_state
 	var hit: Dictionary = space_state.intersect_ray(query)
@@ -277,12 +274,3 @@ func _try_spawn_coolant_drop() -> void:
 	coolant_drop.amount = coolant_drop_amount
 	coolant_drop.global_position = global_position + Vector2(6, -4)
 	get_tree().current_scene.add_child(coolant_drop)
-
-func _on_detection_body_entered(body: Node2D) -> void:
-	if body is PlayerController:
-		is_player_in_detection = true
-		player = body
-
-func _on_detection_body_exited(body: Node2D) -> void:
-	if body == player:
-		is_player_in_detection = false

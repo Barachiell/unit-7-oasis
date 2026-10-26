@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://d1cbx34w5vgqe"]
 
 [ext_resource type="Script" path="res://scripts/npc/human_npc.gd" id="1_2pnad"]
-[ext_resource type="Texture2D" path="res://icon.svg" id="2_5hcef"]
+[ext_resource type="Texture2D" path="res://assets/sprites/npcs/standing/south.png" id="2_3q13x"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_6a5u6"]
 radius = 14.0
@@ -12,9 +12,9 @@ script = ExtResource("1_2pnad")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(0, -2)
-modulate = Color(0.890196, 0.788235, 0.65098, 1)
-scale = Vector2(0.12, 0.16)
-texture = ExtResource("2_5hcef")
+modulate = Color(1, 1, 1, 1)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_3q13x")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_6a5u6")

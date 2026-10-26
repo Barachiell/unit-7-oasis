@@ -13,21 +13,21 @@ var current_dialogue_id: String = ""
 func _ready() -> void:
 	_load_dialogue_data()
 
-func show_dialogue(dialogue_id: String, player: PlayerController = null) -> void:
+func show_dialogue(dialogue_id: String, player: PlayerController = null) -> bool:
 	if dialogue_id.is_empty():
 		push_error("DialogueManager.show_dialogue called with empty id.")
-		return
+		return false
 	if not dialogue_data.has(dialogue_id):
 		push_error("Dialogue id '%s' does not exist in %s." % [dialogue_id, DIALOGUE_FILE_PATH])
-		return
+		return false
 	if current_dialogue_box != null and is_instance_valid(current_dialogue_box):
 		push_error("Cannot start dialogue '%s' while '%s' is active." % [dialogue_id, current_dialogue_id])
-		return
+		return false
 
 	var raw_pages: Variant = dialogue_data[dialogue_id]
 	if not raw_pages is Array:
 		push_error("Dialogue id '%s' must map to an array of pages." % dialogue_id)
-		return
+		return false
 	var raw_pages_array: Array = raw_pages
 
 	var pages: Array[Dictionary] = []
@@ -37,7 +37,7 @@ func show_dialogue(dialogue_id: String, player: PlayerController = null) -> void
 		pages.append(raw_page)
 	if pages.is_empty():
 		push_error("Dialogue id '%s' has no valid pages." % dialogue_id)
-		return
+		return false
 
 	current_dialogue_id = dialogue_id
 	blocked_player = player
@@ -48,11 +48,12 @@ func show_dialogue(dialogue_id: String, player: PlayerController = null) -> void
 	var dialogue_box := dialogue_box_variant as CanvasLayer
 	if dialogue_box == null:
 		push_error("Failed to instantiate dialogue box scene.")
-		return
+		return false
 	current_dialogue_box = dialogue_box
 	get_tree().root.add_child(current_dialogue_box)
 	current_dialogue_box.connect("dialogue_completed", Callable(self, "_on_dialogue_completed"))
 	current_dialogue_box.call("show_pages", pages)
+	return true
 
 func _on_dialogue_completed() -> void:
 	if blocked_player != null:

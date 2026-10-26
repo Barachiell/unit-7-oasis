@@ -310,8 +310,14 @@ func _show_dialogue(dialogue_id: String) -> void:
 	var dialogue_manager: Node = get_node("/root/DialogueManager")
 	if dialogue_manager == null:
 		return
-	dialogue_manager.show_dialogue(dialogue_id, player)
-	await dialogue_manager.dialogue_finished
+	var started: bool = dialogue_manager.show_dialogue(dialogue_id, player)
+	if not started:
+		return
+
+	while true:
+		var finished_id: String = await dialogue_manager.dialogue_finished
+		if finished_id == dialogue_id:
+			return
 
 func _try_show_intro_dialogue() -> void:
 	if intro_dialogue_id.is_empty():

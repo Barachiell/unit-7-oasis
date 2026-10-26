@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://dr8xukmugyssm"]
+[gd_scene load_steps=11 format=3 uid="uid://dr8xukmugyssm"]
 
 [ext_resource type="Script" path="res://scripts/zones/zone_runtime.gd" id="1_kj10h"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_ttn5p"]
@@ -7,6 +7,8 @@
 [ext_resource type="PackedScene" path="res://ui/stamina_ring.tscn" id="5_cn2vt"]
 [ext_resource type="Texture2D" path="res://assets/sprites/zones/village_background.png" id="6_6lnw6"]
 [ext_resource type="Texture2D" path="res://assets/sprites/zones/village_overhead.png" id="7_n56v4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/npcs/standing/south-east.png" id="8_4pnr2"]
+[ext_resource type="Texture2D" path="res://assets/sprites/npcs/standing/south-west.png" id="9_eisq6"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_exit_open"]
 size = Vector2(40, 20)
@@ -58,10 +60,16 @@ position = Vector2(272, 248)
 dialogue_id = "village_human_2"
 npc_name = "Mechanic"
 
+[node name="Sprite2D" parent="Entities/HumanNPC2" index="0"]
+texture = ExtResource("8_4pnr2")
+
 [node name="HumanNPC3" parent="Entities" instance=ExtResource("4_h8y6h")]
 position = Vector2(215, 285)
 dialogue_id = "village_human_3"
 npc_name = "Child"
+
+[node name="Sprite2D" parent="Entities/HumanNPC3" index="0"]
+texture = ExtResource("9_eisq6")
 
 [node name="Pickups" type="Node2D" parent="."]
 

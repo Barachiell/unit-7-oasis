@@ -45,8 +45,14 @@ func _show_intro_dialogue() -> void:
 		push_warning("DialogueManager autoload missing; skipping intro dialogue.")
 		return
 
-	dialogue_manager.show_dialogue(INTRO_DIALOGUE_ID)
-	await dialogue_manager.dialogue_finished
+	var started: bool = dialogue_manager.show_dialogue(INTRO_DIALOGUE_ID)
+	if not started:
+		return
+
+	while true:
+		var finished_id: String = await dialogue_manager.dialogue_finished
+		if finished_id == INTRO_DIALOGUE_ID:
+			return
 
 func _play_intro_video() -> void:
 	var intro_stream: VideoStream = _load_intro_stream()

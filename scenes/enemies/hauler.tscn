@@ -1,6 +1,7 @@
-[gd_scene format=3 uid="uid://c4tfpnvjstf7v"]
+[gd_scene load_steps=2 format=3 uid="uid://c4tfpnvjstf7v"]
 
 [ext_resource type="PackedScene" path="res://scenes/enemies/enemy_base.tscn" id="1_h2bc8"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/bulk_robot/standing/south.png" id="2_f6m3l"]
 
 [node name="Hauler" instance=ExtResource("1_h2bc8")]
 max_health = 2
@@ -12,10 +13,13 @@ detection_radius = 170.0
 ammo_drop_amount = 4
 coolant_drop_chance = 0.35
 attack_range = 140.0
+sprite_asset_root = "res://assets/sprites/enemies/bulk_robot"
+sprite_walk_frame_duration = 0.2
 
 [node name="Sprite2D" parent="." index="0"]
-modulate = Color(0.490196, 0.686275, 0.32549, 1)
-scale = Vector2(0.14, 0.2)
+modulate = Color(1, 1, 1, 1)
+scale = Vector2(0.6, 0.6)
+texture = ExtResource("2_f6m3l")
 
 [node name="PatrolPoints" parent="." index="8"]
 

@@ -7,6 +7,8 @@ enum EnemyState {
 	CHASE
 }
 
+const DEFAULT_FACING_DIRECTION := Vector2.DOWN
+
 @export var max_health: int = 1
 @export var move_speed: float = 62.0
 @export var fire_rate: float = 1.4
@@ -21,6 +23,8 @@ enum EnemyState {
 @export var coolant_drop_scene: PackedScene = preload("res://scenes/pickups/coolant_drop.tscn")
 @export_range(0.0, 1.0, 0.01) var coolant_drop_chance: float = 0.15
 @export var coolant_drop_amount: int = 1
+@export var sprite_asset_root: String = ""
+@export var sprite_walk_frame_duration: float = 0.22
 
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var muzzle: Marker2D = $Muzzle
@@ -39,6 +43,8 @@ var patrol_index: int = 0
 var player: PlayerController
 var is_player_in_detection: bool = false
 var rng := RandomNumberGenerator.new()
+var sprite_director: EnemySpriteDirector
+var facing_direction: Vector2 = DEFAULT_FACING_DIRECTION
 
 func _ready() -> void:
 	add_to_group("enemy")
@@ -50,6 +56,7 @@ func _ready() -> void:
 	detection_area.body_entered.connect(_on_detection_body_entered)
 	detection_area.body_exited.connect(_on_detection_body_exited)
 	player = get_tree().get_first_node_in_group("player") as PlayerController
+	_configure_sprite_director()
 
 func _physics_process(delta: float) -> void:
 	if player == null or not is_instance_valid(player):
@@ -71,6 +78,7 @@ func _physics_process(delta: float) -> void:
 			_chase_and_attack(delta)
 
 	move_and_slide()
+	_update_sprite(delta)
 
 func _configure_detection_radius() -> void:
 	var circle := detection_shape.shape as CircleShape2D
@@ -127,7 +135,28 @@ func _chase_and_attack(delta: float) -> void:
 func _face_direction(direction: Vector2) -> void:
 	if direction.length_squared() <= 0.0001:
 		return
+	facing_direction = direction
 	muzzle.rotation = direction.angle()
+
+func _configure_sprite_director() -> void:
+	if sprite_asset_root.is_empty():
+		return
+
+	sprite_director = EnemySpriteDirector.new(sprite_asset_root, sprite_walk_frame_duration)
+	sprite.texture = sprite_director.resolve_texture(EnemySpriteDirector.VisualState.STANDING, facing_direction)
+
+func _update_sprite(delta: float) -> void:
+	if sprite_director == null:
+		return
+
+	var visual_state: int = EnemySpriteDirector.VisualState.STANDING
+	if telegraph_remaining > 0.0:
+		visual_state = EnemySpriteDirector.VisualState.SHOOTING
+	elif velocity.length_squared() > 0.0001:
+		visual_state = EnemySpriteDirector.VisualState.WALKING
+
+	var speed_multiplier: float = velocity.length() / maxf(move_speed, 0.01)
+	sprite.texture = sprite_director.next_texture(delta, visual_state, facing_direction, speed_multiplier)
 
 func _can_engage_player() -> bool:
 	return player != null and is_player_in_detection and _has_line_of_sight_to_player()
